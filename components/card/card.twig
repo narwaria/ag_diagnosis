@@ -1,8 +1,15 @@
 {% set card_orientation = orientation|default('vertical') %}
 {% set card_style = style|default('framed') %}
 {% set card_background = background|default('noColor') %}
-{% set is_text_centered = is_text_centered|default(false) ? 'yes' : 'no' %}
-{% set is_clickable = url is not empty and url != 'No URL' ? 'yes' : 'no' %}
+
+{# Boolean instead of string #}
+{% set is_text_centered = is_text_centered|default(false) %}
+{% set is_clickable = url is not empty and url != 'No URL' %}
+
+
+{# ===========================
+   Card wrapper
+=========================== #}
 
 {% set card =
   html_cva(
@@ -13,12 +20,12 @@
         horizontal: 'md:flex-row'
       },
       isTextCentered: {
-        yes: 'text-center',
-        no: 'text-left'
+        true: 'text-center',
+        false: 'text-left'
       },
       clickable: {
-        yes: 'cursor-pointer hover:scale-103 hover:shadow-sm',
-        no: ''
+        true: 'cursor-pointer hover:scale-103 hover:shadow-sm',
+        false: ''
       },
       style: {
         framed: 'gap-4 p-4 lg:gap-4 lg:p-6',
@@ -34,16 +41,14 @@
         inverted: 'bg-foreground text-background hover:bg-foreground/90 hover:text-background/90',
         noColor: 'shadow-none hover:text-foreground/90'
       }
-    },
-    compound_variants: [
-      {
-        style: ['framed'],
-        backgroundColor: ['noColor'],
-        class: 'border border-secondary hover:border-secondary/80'
-      }
-    ]
+    }
   )
 %}
+
+
+{# ===========================
+   Media wrapper
+=========================== #}
 
 {% set card_media =
   html_cva(
@@ -61,6 +66,11 @@
   )
 %}
 
+
+{# ===========================
+   Content wrapper
+=========================== #}
+
 {% set card_content =
   html_cva(
     base: 'flex w-full flex-col items-baseline',
@@ -73,113 +83,127 @@
         framed: '',
         full: 'rounded-b p-4 lg:p-6'
       }
-    },
-    compound_variants: [
-      {
-        orientation: ['horizontal'],
-        style: ['full'],
-        class: 'p-4 lg:p-6'
-      },
-      {
-        orientation: ['horizontal'],
-        style: ['framed'],
-        class: ''
-      },
-      {
-        orientation: ['vertical'],
-        backgroundColor: ['noColor'],
-        style: ['full'],
-        class: 'px-0!'
-      },
-      {
-        orientation: ['horizontal'],
-        backgroundColor: ['noColor'],
-        style: ['full'],
-        class: 'py-0!'
-      }
-    ]
+    }
   )
 %}
 
+
 <div
-  class="{{
-  card.apply(
-    {
-      orientation: card_orientation,
-      isTextCentered: is_text_centered,
-      clickable: is_clickable,
-      style: card_style,
-      backgroundColor: card_background
-    },
-    card_classes|default('')
-  )
-  }}"
+  class="{{ card.apply({
+    orientation: card_orientation,
+    isTextCentered: is_text_centered,
+    clickable: is_clickable,
+    style: card_style,
+    backgroundColor: card_background
+  }) }}"
 >
-  {% if media.src is not empty %}
+
+  {# ===========================
+     SAFE MEDIA CHECK
+  =========================== #}
+
+  {% if media is not null and media.src is defined and media.src is not empty %}
+
     <div
-      class="{{
-      card_media.apply({
+      class="{{ card_media.apply({
         orientation: card_orientation,
-        style: card_style,
-        backgroundColor: card_background
-      })
-      }}"
+        style: card_style
+      }) }}"
     >
+
       {% block media %}
+
         {{
           include(
             'canvas:image',
             {
               src: media.src,
-              alt: media.alt,
+              alt: media.alt|default(''),
               class: 'object-cover w-full h-full',
-              width: media.width,
-              height: media.height,
-              sizes: card_orientation == 'stacked' ? 'auto, 100vw' : '50vw'
+              width: media.width|default(null),
+              height: media.height|default(null),
+              sizes: card_orientation == 'vertical'
+                ? 'auto, 100vw'
+                : '50vw'
             },
             false,
             true
           )
         }}
+
       {% endblock %}
+
     </div>
+
   {% endif %}
 
+
   <div
-    class="{{
-    card_content.apply({
+    class="{{ card_content.apply({
       orientation: card_orientation,
-      style: card_style,
-      backgroundColor: card_background
-    })
-    }}"
+      style: card_style
+    }) }}"
   >
+
     <div class="@container flex w-full flex-col gap-1 md:gap-2">
+
+      {# ===========================
+         FIXED HEADING LOGIC
+      =========================== #}
+
       <h3 class="text-xl font-semibold @sm:text-2xl @2xl:text-3xl">
+
         {% if is_clickable %}
-          <a href="{{ url }}" class="after:absolute after:inset-0 after:content-['']">{{ heading_text }}</a>
+          <a href="{{ url }}"
+             class="after:absolute after:inset-0 after:content-['']">
+            {{ heading_text }}
+          </a>
+        {% else %}
+          {{ heading_text }}
         {% endif %}
+
       </h3>
-      {% if start_date is not empty or start_time is not empty %}
+
+
+      {% if start_date or start_time %}
+
         <p class="text-sm opacity-70">
-          {{- start_date -}}
-          {%- if start_time is not empty -%}
-            {{- start_date is not empty ? ' · ' -}}{{ start_time }}
-          {%- endif -%}
-          {%- if end_date is not empty or end_time is not empty -%}
-            {{- ' – ' -}}
-            {{- end_date -}}
-            {%- if end_time is not empty -%}
-              {{- end_date is not empty ? ' · ' -}}{{ end_time }}
-            {%- endif -%}
-          {%- endif %}
+
+          {{ start_date }}
+
+          {% if start_time %}
+            {{ start_date ? ' · ' }}
+            {{ start_time }}
+          {% endif %}
+
+          {% if end_date or end_time %}
+
+            {{ ' – ' }}
+
+            {{ end_date }}
+
+            {% if end_time %}
+              {{ end_date ? ' · ' }}
+              {{ end_time }}
+            {% endif %}
+
+          {% endif %}
+
         </p>
+
       {% endif %}
-      {% if text is not empty %}
+
+
+      {% if text %}
+
         <p class="mb-0 text-md @sm:text-lg @2xl:text-xl">
           {{ text }}
         </p>
+
       {% endif %}
+
     </div>
+
   </div>
+
 </div>

@@ -1,4 +1,4 @@
-"$schema": "https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json"
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
 name: Image card
 group: Card
 props:
@@ -27,6 +27,7 @@ props:
         bright: Bright
         light: Light
         inverted: Inverted
+      default: default
       examples:
         - default
     style:
@@ -38,6 +39,7 @@ props:
       meta:enum:
         framed: Framed
         full: Full width
+      default: framed
       examples:
         - framed
     orientation:
@@ -49,6 +51,7 @@ props:
       meta:enum:
         vertical: Vertical
         horizontal: Horizontal
+      default: vertical
       examples:
         - vertical
     heading_text:
@@ -71,13 +74,16 @@ props:
         - string
         - "null"
       title: Link
+      default: null
     media:
       $ref: json-schema-definitions://canvas.module/image
       title: Image
       type:
         - object
         - "null"
+      default: null
       examples:
+        - null
         - src: "assets/gradient.png"
           width: 1200
           height: 900
@@ -87,6 +93,7 @@ props:
         - string
         - "null"
       title: Date
+      default: null
       examples:
         - "February 27, 2026"
     start_date:
@@ -94,6 +101,7 @@ props:
         - string
         - "null"
       title: Start date
+      default: null
       examples:
         - "February 27, 2026"
     end_date:
@@ -101,6 +109,7 @@ props:
         - string
         - "null"
       title: End date
+      default: null
       examples:
         - "February 28, 2026"
     start_time:
@@ -108,6 +117,7 @@ props:
         - string
         - "null"
       title: Start time
+      default: null
       examples:
         - "2:00 PM"
     end_time:
@@ -115,6 +125,7 @@ props:
         - string
         - "null"
       title: End time
+      default: null
       examples:
         - "4:00 PM"
     text:
@@ -122,11 +133,30 @@ props:
         - string
         - "null"
       title: Description
+      default: null
       pattern: "(.|\\r?\\n)*"
       examples:
         - "Quaerat laborum rerum dolores dolores dolor qui."
     is_text_centered:
       type: boolean
       title: Center text
+      default: false
       examples:
         - false
+examples:
+  default:
+    props:
+      heading_text: "Example card title"
+      orientation: vertical
+      style: framed
+      background: default
+      level: 3
+      url: null
+      media: null
+      date: null
+      start_date: "February 27, 2026"
+      end_date: "February 28, 2026"
+      start_time: "2:00 PM"
+      end_time: "4:00 PM"
+      text: "This is an example card description."
+      is_text_centered: false
