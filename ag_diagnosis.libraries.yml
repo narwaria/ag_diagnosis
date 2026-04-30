@@ -1,9 +1,26 @@
 global:
   css:
+    base:
+      css/base/reset.css: {}
+      css/base/typography.css: {}
+
+    layout:
+      css/layout/grid.css: {}
+      css/layout/header.css: {}
+      css/layout/footer.css: {}
+
+    component:
+      css/components/buttons.css: {}
+      css/components/forms.css: {}
+      css/components/cards.css: {}
+
     theme:
-      css/style.css: {}
+      css/theme/colors.css: {}
+      css/theme/theme.css: {}
+
   js:
     js/script.js: {}
+
   dependencies:
     - core/drupal
     - core/once

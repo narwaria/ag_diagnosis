@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * @file
+ * Theme functions for AG Diagnosis.
+ */
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function ag_diagnosis_preprocess_page(array &$variables) {
+
+  // Add body class example.
+  $variables['attributes']['class'][] = 'ag-diagnosis';
+
+}
+
+/**
+ * Implements hook_preprocess_node().
+ */
+function ag_diagnosis_preprocess_node(array &$variables) {
+
+  $node = $variables['node'];
+
+  if ($node->bundle() == 'article') {
+    $variables['attributes']['class'][] = 'node-article-custom';
+  }
+
+}
