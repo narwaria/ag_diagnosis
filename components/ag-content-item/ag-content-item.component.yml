@@ -27,10 +27,35 @@ props:
 
     body:
       type: string
-      title: Body content
+      title: Rich text
       description: Main rich text content for this section. HTML is supported.
+      contentMediaType: text/html
+      x-formatting-context: block
       examples:
         - Welcome to Ambey Global. By accessing our website, you agree to comply with these Terms and Conditions.
+
+    text_size:
+      type: string
+      title: Text size
+      enum:
+        - text-xs
+        - text-sm
+        - normal
+        - text-lg
+        - text-xl
+        - text-2xl
+        - text-3xl
+      meta:enum:
+        text-xs: 12px
+        text-sm: 14px
+        normal: 16px (default)
+        text-lg: 18px
+        text-xl: 20px
+        text-2xl: 24px
+        text-3xl: 32px
+      default: normal
+      examples:
+        - normal
 
     variant:
       type: string

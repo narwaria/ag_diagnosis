@@ -7,6 +7,7 @@
  * - section_id
  * - heading
  * - body
+ * - text_size
  * - variant
  * - show_divider
  *
@@ -17,6 +18,7 @@
 #}
 
 {% set variant = variant|default('default') %}
+{% set text_size = text_size|default('normal') %}
 {% set show_divider = show_divider ?? true %}
 
 {% set section_classes = {
@@ -30,13 +32,24 @@
 } %}
 
 {% set body_classes = {
-  'default': 'mt-4 text-base leading-7 text-slate-600',
-  'highlight': 'mt-4 text-base leading-7 text-slate-700'
+  'default': 'mt-4 leading-7 text-slate-600',
+  'highlight': 'mt-4 leading-7 text-slate-700'
+} %}
+
+{% set text_size_classes = {
+  'text-xs': 'text-xs',
+  'text-sm': 'text-sm',
+  'normal': 'text-base',
+  'text-lg': 'text-lg',
+  'text-xl': 'text-xl',
+  'text-2xl': 'text-2xl',
+  'text-3xl': 'text-3xl'
 } %}
 
 {% set section_class = section_classes[variant] ?? section_classes.default %}
 {% set heading_class = heading_classes[variant] ?? heading_classes.default %}
 {% set body_class = body_classes[variant] ?? body_classes.default %}
+{% set text_size_class = text_size in text_size_classes|keys ? text_size_classes[text_size] : text_size_classes.normal %}
 
 {% if section_id and heading %}
   <section id="{{ section_id|clean_id }}" class="{{ section_class }}">
@@ -45,7 +58,7 @@
     </h3>
 
     {% if body %}
-      <div class="{{ body_class }} [&_p]:mt-4 [&_p:first-child]:mt-0 [&_ul]:mt-5 [&_ul]:list-disc [&_ul]:space-y-3 [&_ul]:pl-6 [&_ol]:mt-5 [&_ol]:list-decimal [&_ol]:space-y-3 [&_ol]:pl-6 [&_li]:leading-7 [&_a]:font-semibold [&_a]:text-orange-700 hover:[&_a]:text-orange-800">
+      <div class="{{ body_class }} {{ text_size_class }} [&_p]:mt-4 [&_p:first-child]:mt-0 [&_ul]:mt-5 [&_ul]:list-disc [&_ul]:space-y-3 [&_ul]:pl-6 [&_ol]:mt-5 [&_ol]:list-decimal [&_ol]:space-y-3 [&_ol]:pl-6 [&_li]:leading-7 [&_a]:font-semibold [&_a]:text-orange-700 hover:[&_a]:text-orange-800">
         {{ body|raw }}
       </div>
     {% endif %}
