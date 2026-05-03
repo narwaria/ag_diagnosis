@@ -1,0 +1,134 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/11.x/core/assets/schemas/v1/component.schema.json
+
+name: AG Content Section
+description: Displays long-form page content with optional sticky sidebar navigation and main content card.
+status: stable
+group: Ambey Global
+
+props:
+  type: object
+  properties:
+    heading:
+      type: string
+      title: Heading
+      description: Main heading displayed at the top of the content card.
+      examples:
+        - Terms of Use for Ambey Global
+
+    intro:
+      type: string
+      title: Intro text
+      description: Short introduction text displayed below the heading.
+      examples:
+        - Ambey Global provides complete packaging solutions for every industry.
+
+    sidebar_title:
+      type: string
+      title: Sidebar title
+      description: Title displayed above the sidebar navigation links.
+      default: Page Sections
+      examples:
+        - Page Sections
+
+    show_sidebar:
+      type: boolean
+      title: Show sidebar
+      description: Show or hide the sidebar navigation.
+      default: true
+      examples:
+        - true
+
+    sidebar_sticky:
+      type: boolean
+      title: Sticky sidebar
+      description: Makes the sidebar sticky on desktop screens.
+      default: true
+      examples:
+        - true
+
+    sidebar_list_style:
+      type: string
+      title: Sidebar list style
+      description: Marker style for the sidebar navigation list.
+      enum:
+        - disc
+        - decimal
+        - square
+        - lower-alpha
+        - lower-roman
+        - none
+      meta:enum:
+        disc: Dots
+        decimal: Numbers
+        square: Squares
+        lower-alpha: Letters
+        lower-roman: Roman numerals
+        none: None
+      default: disc
+      examples:
+        - disc
+
+    show_intro_border:
+      type: boolean
+      title: Show intro border
+      description: Adds a bottom border below the intro section.
+      default: true
+      examples:
+        - true
+
+    section_background:
+      type: string
+      title: Section background
+      description: Background color for the full section.
+      enum:
+        - white
+        - slate
+        - orange-light
+      default: slate
+      examples:
+        - slate
+
+    container_width:
+      type: string
+      title: Container width
+      description: Maximum width of the content container.
+      enum:
+        - max-w-5xl
+        - max-w-6xl
+        - max-w-7xl
+      default: max-w-7xl
+      examples:
+        - max-w-7xl
+
+    padding_y:
+      type: string
+      title: Vertical padding
+      description: Top and bottom spacing for the section.
+      enum:
+        - small
+        - medium
+        - large
+      default: medium
+      examples:
+        - medium
+
+    card_style:
+      type: string
+      title: Card style
+      description: Visual style of the main content card.
+      enum:
+        - flat
+        - shadow
+        - ring
+      default: ring
+      examples:
+        - ring
+
+slots:
+  sidebar_items:
+    title: Sidebar items
+    description: Add sidebar navigation item components here.
+
+  content_sections:
+    title: Content sections
+    description: Add page content section components here.

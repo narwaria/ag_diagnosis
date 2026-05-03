@@ -1,0 +1,61 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/11.x/core/assets/schemas/v1/component.schema.json
+
+name: AG Content Item
+description: Displays one long-form content section with heading, body, optional divider, and optional highlighted style.
+status: stable
+group: Ambey Global
+
+props:
+  type: object
+  required:
+    - section_id
+    - heading
+  properties:
+    section_id:
+      type: string
+      title: Section ID
+      description: Unique ID used for anchor navigation. Do not include #.
+      examples:
+        - introduction
+
+    heading:
+      type: string
+      title: Heading
+      description: Section heading displayed as H3.
+      examples:
+        - 1. Introduction
+
+    body:
+      type: string
+      title: Body content
+      description: Main rich text content for this section. HTML is supported.
+      examples:
+        - Welcome to Ambey Global. By accessing our website, you agree to comply with these Terms and Conditions.
+
+    variant:
+      type: string
+      title: Section variant
+      description: Choose the visual style for this content section.
+      enum:
+        - default
+        - highlight
+      default: default
+      examples:
+        - default
+
+    show_divider:
+      type: boolean
+      title: Show divider after section
+      description: Adds a horizontal divider after this section.
+      default: true
+      examples:
+        - true
+
+slots:
+  extra_content:
+    title: Extra content
+    description: Optional extra content such as contact cards.
+
+  cta_content:
+    title: CTA content
+    description: Optional CTA button or link content displayed below extra content.

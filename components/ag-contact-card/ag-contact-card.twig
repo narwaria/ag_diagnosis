@@ -1,0 +1,48 @@
+{#
+/**
+ * @file
+ * AG Contact Card component.
+ *
+ * Available props:
+ * - label
+ * - title
+ * - description
+ * - url
+ * - link_new_tab
+ */
+#}
+
+{% set link_new_tab = link_new_tab ?? false %}
+
+<div class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-orange-100">
+  {% if label %}
+    <p class="text-sm font-semibold uppercase tracking-wide text-orange-700">
+      {{ label }}
+    </p>
+  {% endif %}
+
+  {% if title %}
+    {% if url %}
+      <a
+        href="{{ url }}"
+        class="mt-2 inline-flex text-base font-bold text-slate-900 transition hover:text-orange-700"
+        {% if link_new_tab %}
+          target="_blank"
+          rel="noopener noreferrer"
+        {% endif %}
+      >
+        {{ title }}
+      </a>
+    {% else %}
+      <p class="mt-2 text-base font-bold text-slate-900">
+        {{ title }}
+      </p>
+    {% endif %}
+  {% endif %}
+
+  {% if description %}
+    <p class="mt-1 text-sm text-slate-600">
+      {{ description }}
+    </p>
+  {% endif %}
+</div>

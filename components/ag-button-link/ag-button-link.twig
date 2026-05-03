@@ -1,0 +1,94 @@
+{#
+/**
+ * @file
+ * AG Button Link component.
+ *
+ * Available props:
+ * - text
+ * - url
+ * - style
+ * - size
+ * - icon
+ * - icon_size
+ * - icon_first
+ * - open_new_tab
+ */
+#}
+
+{% set style = style|default('primary') %}
+{% set size = size|default('medium') %}
+{% set icon = icon|default('rocket') %}
+{% set icon_size = icon_size|default('small') %}
+{% set icon_first = icon_first ?? false %}
+{% set open_new_tab = open_new_tab ?? false %}
+
+{% set style_classes = {
+  'primary': 'bg-orange-600 text-white shadow-sm hover:bg-orange-700',
+  'secondary': 'bg-slate-900 text-white shadow-sm hover:bg-slate-800',
+  'outline': 'bg-white text-orange-700 ring-1 ring-orange-200 hover:bg-orange-50',
+  'ghost': 'bg-transparent text-orange-700 hover:bg-orange-50',
+  'soft': 'bg-orange-100 text-orange-900 hover:bg-orange-200',
+  'light': 'bg-white text-slate-900 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50',
+  'dark': 'bg-slate-950 text-white shadow-sm hover:bg-slate-800',
+  'link': 'bg-transparent px-0 py-0 text-orange-700 underline underline-offset-4 hover:text-orange-900',
+  'success': 'bg-emerald-600 text-white shadow-sm hover:bg-emerald-700',
+  'danger': 'bg-red-600 text-white shadow-sm hover:bg-red-700'
+} %}
+
+{% set size_classes = {
+  'small': 'px-4 py-2 text-xs',
+  'medium': 'px-6 py-3 text-sm',
+  'large': 'px-8 py-4 text-base'
+} %}
+
+{% set icon_size_options = ['extra-small', 'small', 'medium', 'large', 'extra-large'] %}
+
+{% set style_class = style in style_classes|keys ? style_classes[style] : style_classes.primary %}
+{% set size_class = size in size_classes|keys ? size_classes[size] : size_classes.medium %}
+{% set resolved_icon_size = icon_size in icon_size_options ? icon_size : 'small' %}
+{% set has_icon = icon is not empty %}
+
+{% if text and url %}
+  <div class="mt-6">
+    <a
+      href="{{ url }}"
+      class="inline-flex items-center gap-2 rounded-full font-bold transition {{ size_class }} {{ style_class }}"
+      {% if open_new_tab %}
+        target="_blank"
+        rel="noopener noreferrer"
+      {% endif %}
+    >
+      {% if has_icon and icon_first %}
+        <span aria-hidden="true">
+          {{
+            include(
+              '@diagnosis/components/icon/icon.twig',
+              {
+                weight: 'bold',
+                icon: icon,
+                icon_size: resolved_icon_size
+              },
+              with_context: false
+            )
+          }}
+        </span>
+      {% endif %}
+      {{ text }}
+      {% if has_icon and not icon_first %}
+        <span aria-hidden="true">
+          {{
+            include(
+              '@diagnosis/components/icon/icon.twig',
+              {
+                weight: 'bold',
+                icon: icon,
+                icon_size: resolved_icon_size
+              },
+              with_context: false
+            )
+          }}
+        </span>
+      {% endif %}
+    </a>
+  </div>
+{% endif %}

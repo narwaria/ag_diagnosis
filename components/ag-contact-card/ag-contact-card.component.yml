@@ -1,0 +1,48 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/11.x/core/assets/schemas/v1/component.schema.json
+
+name: AG Contact Card
+description: Displays a small contact information card for company, email, phone, address, or other contact details.
+status: stable
+group: Ambey Global
+
+props:
+  type: object
+  required:
+    - label
+    - title
+  properties:
+    label:
+      type: string
+      title: Label
+      description: Small uppercase label displayed above the title.
+      examples:
+        - Company
+
+    title:
+      type: string
+      title: Title
+      description: Main value displayed in the card.
+      examples:
+        - Ambey Global
+
+    description:
+      type: string
+      title: Description
+      description: Supporting text displayed below the title.
+      examples:
+        - Complete Packaging Solutions for Every Industry
+
+    url:
+      type: string
+      title: URL
+      description: Optional link URL. Example mailto:info@ambeyglobal.com or /contact.
+      examples:
+        - mailto:info@ambeyglobal.com
+
+    link_new_tab:
+      type: boolean
+      title: Open link in new tab
+      description: Opens the link in a new browser tab when enabled.
+      default: false
+      examples:
+        - false

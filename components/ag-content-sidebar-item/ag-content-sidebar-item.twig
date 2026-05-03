@@ -1,0 +1,29 @@
+{#
+/**
+ * @file
+ * AG Content Sidebar Item component.
+ *
+ * Available props:
+ * - label
+ * - anchor_id
+ * - link_style
+ */
+#}
+
+{% set link_style = link_style|default('default') %}
+
+{% set link_style_classes = {
+  'default': 'text-slate-600 hover:text-orange-600',
+  'active': 'text-orange-700 font-bold',
+  'muted': 'text-slate-400 hover:text-orange-600'
+} %}
+
+{% set link_style_class = link_style_classes[link_style] ?? link_style_classes.default %}
+
+{% if label and anchor_id %}
+  <li>
+    <a href="#{{ anchor_id|clean_id }}" class="transition {{ link_style_class }}">
+      {{ label }}
+    </a>
+  </li>
+{% endif %}

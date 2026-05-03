@@ -1,0 +1,38 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/11.x/core/assets/schemas/v1/component.schema.json
+
+name: AG Content Sidebar Item
+description: Displays a single sidebar anchor navigation item for long-form content pages.
+status: stable
+group: Ambey Global
+
+props:
+  type: object
+  required:
+    - label
+    - anchor_id
+  properties:
+    label:
+      type: string
+      title: Label
+      description: Text displayed for the sidebar navigation item.
+      examples:
+        - 1. Introduction
+
+    anchor_id:
+      type: string
+      title: Anchor ID
+      description: ID of the content section without the # symbol.
+      examples:
+        - introduction
+
+    link_style:
+      type: string
+      title: Link style
+      description: Visual style for sidebar link.
+      enum:
+        - default
+        - active
+        - muted
+      default: default
+      examples:
+        - default

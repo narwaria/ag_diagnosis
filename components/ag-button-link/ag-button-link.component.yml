@@ -1,0 +1,104 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/11.x/core/assets/schemas/v1/component.schema.json
+
+name: AG Button Link
+description: Displays a configurable CTA button link.
+status: stable
+group: Ambey Global
+
+props:
+  type: object
+  required:
+    - text
+    - url
+  properties:
+    text:
+      type: string
+      title: Button text
+      description: Text displayed inside the button.
+      examples:
+        - Contact Ambey Global
+
+    url:
+      type: string
+      title: URL
+      description: Link URL for the button.
+      examples:
+        - /contact
+
+    style:
+      type: string
+      title: Button style
+      description: Visual style of the button.
+      enum:
+        - primary
+        - secondary
+        - outline
+        - ghost
+        - soft
+        - light
+        - dark
+        - link
+        - success
+        - danger
+      meta:enum:
+        primary: Primary
+        secondary: Secondary
+        outline: Outline
+        ghost: Ghost
+        soft: Soft
+        light: Light
+        dark: Dark
+        link: Text link
+        success: Success
+        danger: Danger
+      default: primary
+      examples:
+        - primary
+
+    size:
+      type: string
+      title: Button size
+      description: Button spacing size.
+      enum:
+        - small
+        - medium
+        - large
+      default: medium
+      examples:
+        - medium
+
+    icon:
+      type: string
+      title: Icon name
+      description: 'The ID of an icon from the <a href="https://phosphoricons.com" target="_blank">Phosphor Icons</a> library.'
+      default: "rocket"
+      examples:
+        - "rocket"
+
+    icon_size:
+      type: string
+      title: Icon size
+      enum:
+        - extra-small
+        - small
+        - medium
+        - large
+        - extra-large
+      default: small
+      examples:
+        - small
+
+    icon_first:
+      type: boolean
+      title: Display icon first
+      default: false
+      examples:
+        - false
+
+    open_new_tab:
+      type: boolean
+      title: Open in new tab
+      description: Opens link in a new browser tab.
+      default: false
+      examples:
+        - false

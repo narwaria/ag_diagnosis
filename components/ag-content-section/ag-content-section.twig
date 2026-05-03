@@ -1,0 +1,116 @@
+{#
+/**
+ * @file
+ * AG Content Section component.
+ *
+ * Available props:
+ * - heading
+ * - intro
+ * - sidebar_title
+ * - show_sidebar
+ * - sidebar_sticky
+ * - sidebar_list_style
+ * - show_intro_border
+ * - section_background
+ * - container_width
+ * - padding_y
+ * - card_style
+ *
+ * Available slots:
+ * - sidebar_items
+ * - content_sections
+ */
+#}
+
+{% set show_sidebar = show_sidebar ?? true %}
+{% set sidebar_sticky = sidebar_sticky ?? true %}
+{% set show_intro_border = show_intro_border ?? true %}
+{% set sidebar_title = sidebar_title|default('Page Sections') %}
+{% set sidebar_list_style = sidebar_list_style|default('disc') %}
+
+{% set section_background = section_background|default('slate') %}
+{% set container_width = container_width|default('max-w-7xl') %}
+{% set padding_y = padding_y|default('medium') %}
+{% set card_style = card_style|default('ring') %}
+
+{% set section_background_classes = {
+  'white': 'bg-white',
+  'slate': 'bg-slate-50',
+  'orange-light': 'bg-orange-50'
+} %}
+
+{% set padding_classes = {
+  'small': 'py-8 lg:py-10',
+  'medium': 'py-12 lg:py-16',
+  'large': 'py-16 lg:py-24'
+} %}
+
+{% set card_style_classes = {
+  'flat': 'bg-white',
+  'shadow': 'bg-white shadow-sm',
+  'ring': 'bg-white shadow-sm ring-1 ring-slate-200'
+} %}
+
+{% set sidebar_list_style_classes = {
+  'disc': 'list-disc pl-5',
+  'decimal': 'list-decimal pl-5',
+  'square': 'ag-list-square pl-5',
+  'lower-alpha': 'ag-list-lower-alpha pl-5',
+  'lower-roman': 'ag-list-lower-roman pl-5',
+  'none': 'list-none pl-0'
+} %}
+
+{% set section_background_class = section_background_classes[section_background] ?? section_background_classes.slate %}
+{% set padding_class = padding_classes[padding_y] ?? padding_classes.medium %}
+{% set card_style_class = card_style_classes[card_style] ?? card_style_classes.ring %}
+{% set sidebar_list_style_class = sidebar_list_style_classes[sidebar_list_style] ?? sidebar_list_style_classes.disc %}
+
+<section class="ag-content-section {{ padding_class }} {{ section_background_class }}">
+  <div class="mx-auto grid {{ container_width }} gap-8 px-4 sm:px-6 lg:px-8 {{ show_sidebar ? 'lg:grid-cols-12' : '' }}">
+
+    {% if show_sidebar %}
+      <aside class="lg:col-span-4 xl:col-span-3">
+        <div class="{{ sidebar_sticky ? 'lg:sticky lg:top-24' : '' }} rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+          {% if sidebar_title %}
+            <h2 class="text-lg font-bold text-slate-900">
+              {{ sidebar_title }}
+            </h2>
+          {% endif %}
+
+          {% if sidebar_items %}
+            <ul class="mt-5 space-y-3 text-sm font-medium text-slate-600 {{ sidebar_list_style_class }}">
+              {{ sidebar_items }}
+            </ul>
+          {% endif %}
+        </div>
+      </aside>
+    {% endif %}
+
+    <div class="{{ show_sidebar ? 'lg:col-span-8 xl:col-span-9' : 'lg:col-span-12' }}">
+      <div class="rounded-3xl p-6 sm:p-8 lg:p-10 {{ card_style_class }}">
+
+        {% if heading or intro %}
+          <div class="mb-10 {{ show_intro_border ? 'border-b border-slate-200 pb-8' : '' }}">
+            {% if heading %}
+              <h2 class="text-2xl font-bold text-slate-900 sm:text-3xl">
+                {{ heading }}
+              </h2>
+            {% endif %}
+
+            {% if intro %}
+              <p class="mt-4 text-base leading-7 text-slate-600">
+                {{ intro }}
+              </p>
+            {% endif %}
+          </div>
+        {% endif %}
+
+        {% if content_sections %}
+          {{ content_sections }}
+        {% endif %}
+
+      </div>
+    </div>
+
+  </div>
+</section>

@@ -1,0 +1,67 @@
+{#
+/**
+ * @file
+ * AG Content Item component.
+ *
+ * Available props:
+ * - section_id
+ * - heading
+ * - body
+ * - variant
+ * - show_divider
+ *
+ * Available slots:
+ * - extra_content
+ * - cta_content
+ */
+#}
+
+{% set variant = variant|default('default') %}
+{% set show_divider = show_divider ?? true %}
+
+{% set section_classes = {
+  'default': 'ag-content-item scroll-mt-28',
+  'highlight': 'ag-content-item scroll-mt-28 rounded-3xl bg-orange-50 p-6 ring-1 ring-orange-100 sm:p-8'
+} %}
+
+{% set heading_classes = {
+  'default': 'text-2xl font-bold text-slate-900',
+  'highlight': 'text-2xl font-bold text-slate-900'
+} %}
+
+{% set body_classes = {
+  'default': 'mt-4 text-base leading-7 text-slate-600',
+  'highlight': 'mt-4 text-base leading-7 text-slate-700'
+} %}
+
+{% set section_class = section_classes[variant] ?? section_classes.default %}
+{% set heading_class = heading_classes[variant] ?? heading_classes.default %}
+{% set body_class = body_classes[variant] ?? body_classes.default %}
+
+{% if section_id and heading %}
+  <section id="{{ section_id|clean_id }}" class="{{ section_class }}">
+    <h3 class="{{ heading_class }}">
+      {{ heading }}
+    </h3>
+
+    {% if body %}
+      <div class="{{ body_class }} [&_p]:mt-4 [&_p:first-child]:mt-0 [&_ul]:mt-5 [&_ul]:list-disc [&_ul]:space-y-3 [&_ul]:pl-6 [&_ol]:mt-5 [&_ol]:list-decimal [&_ol]:space-y-3 [&_ol]:pl-6 [&_li]:leading-7 [&_a]:font-semibold [&_a]:text-orange-700 hover:[&_a]:text-orange-800">
+        {{ body|raw }}
+      </div>
+    {% endif %}
+
+    {% if extra_content %}
+      <div class="mt-6 grid gap-4 sm:grid-cols-2">
+        {{ extra_content }}
+      </div>
+    {% endif %}
+
+    {% if cta_content %}
+      {{ cta_content }}
+    {% endif %}
+  </section>
+
+  {% if show_divider and variant != 'highlight' %}
+    <hr class="my-8 border-slate-200">
+  {% endif %}
+{% endif %}
