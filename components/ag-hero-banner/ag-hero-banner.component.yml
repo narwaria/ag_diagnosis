@@ -1,0 +1,306 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/11.x/core/assets/schemas/v1/component.schema.json
+
+name: Ag Hero Banner
+description: Configurable Ambey Global hero banner with background variants, alignment, spacing, and CTA buttons.
+status: stable
+group: Ambey Global
+
+props:
+  type: object
+  properties:
+
+    eyebrow:
+      type: string
+      title: Eyebrow Text
+      description: Small label displayed above the heading.
+      default: 'Ambey Global'
+      examples:
+        - 'Ambey Global'
+
+    heading:
+      type: string
+      title: Heading
+      description: Main hero heading.
+      default: 'Terms & Conditions'
+      examples:
+        - 'Terms & Conditions'
+
+
+    text_size:
+      type: string
+      title: Text size
+      description: Select heading font size.
+      enum:
+        - default
+        - heading-responsive-8xl
+        - heading-responsive-7xl
+        - heading-responsive-6xl
+        - heading-responsive-5xl
+        - heading-responsive-4xl
+        - heading-responsive-3xl
+        - heading-responsive-2xl
+        - heading-responsive-xl
+      meta:enum:
+        default: Default
+        heading-responsive-8xl: 8XL
+        heading-responsive-7xl: 7XL
+        heading-responsive-6xl: 6XL
+        heading-responsive-5xl: 5XL
+        heading-responsive-4xl: 4XL
+        heading-responsive-3xl: 3XL
+        heading-responsive-2xl: 2XL
+        heading-responsive-xl: XL
+      default: heading-responsive-6xl
+      examples:
+        - heading-responsive-4xl
+
+
+    description:
+      type: string
+      title: Description
+      description: Introductory hero description.
+      contentMediaType: text/html
+      x-formatting-context: block
+      default: 'These Terms & Conditions govern the use of the Ambey Global website, product inquiries, quotations, orders, and packaging services.'
+      examples:
+        - 'These Terms & Conditions govern the use of the Ambey Global website, product inquiries, quotations, orders, and packaging services.'
+
+    description_text_size:
+      type: string
+      title: Description text size
+      description: Select description font size.
+      enum:
+        - text-xs
+        - text-sm
+        - normal
+        - text-lg
+        - text-xl
+        - text-2xl
+        - text-3xl
+      meta:enum:
+        text-xs: 12px
+        text-sm: 14px
+        normal: 16px (default)
+        text-lg: 18px
+        text-xl: 20px
+        text-2xl: 24px
+        text-3xl: 32px
+      default: text-lg
+      examples:
+        - normal
+
+    updated_text:
+      type: string
+      title: Updated Text
+      description: Optional supporting text such as last updated date.
+      default: 'Last updated: May 2026'
+      examples:
+        - 'Last updated: May 2026'
+
+    show_eyebrow:
+      type: boolean
+      title: Show Eyebrow
+      description: Show or hide the eyebrow text.
+      default: true
+      examples:
+        - true
+
+    show_updated_text:
+      type: boolean
+      title: Show Updated Text
+      description: Show or hide the updated text.
+      default: true
+      examples:
+        - true
+
+    background_variant:
+      type: string
+      title: Background Variant
+      description: Select hero background style.
+      enum:
+        - dark
+        - orange
+        - light
+        - kraft
+        - gradient
+        - white
+        - paper
+        - charcoal
+        - navy
+        - emerald
+        - copper
+        - sunrise
+        - cool
+      meta:enum:
+        dark: Dark Industrial
+        orange: Orange Brand
+        light: Light Clean
+        kraft: Kraft Paper
+        gradient: Orange Gradient
+        white: White Minimal
+        paper: Soft Paper
+        charcoal: Charcoal
+        navy: Deep Navy
+        emerald: Emerald
+        copper: Copper Gradient
+        sunrise: Sunrise Gradient
+        cool: Cool Blue Gradient
+      default: dark
+      examples:
+        - dark
+
+    layout_width:
+      type: string
+      title: Content Width
+      description: Select content container width.
+      enum:
+        - narrow
+        - default
+        - wide
+      meta:enum:
+        narrow: Narrow
+        default: Default
+        wide: Wide
+      default: default
+      examples:
+        - default
+
+    text_alignment:
+      type: string
+      title: Text Alignment
+      description: Select hero text alignment.
+      enum:
+        - left
+        - center
+        - right
+      meta:enum:
+        left: Left
+        center: Center
+        right: Right
+      default: left
+      examples:
+        - left
+
+    padding_block_start:
+      type: string
+      title: Padding top
+      description: Select top padding for the hero banner.
+      enum:
+        - "0"
+        - "16"
+        - "32"
+        - "64"
+      default: "64"
+      examples:
+        - "64"
+
+    padding_block_end:
+      type: string
+      title: Padding bottom
+      description: Select bottom padding for the hero banner.
+      enum:
+        - "0"
+        - "16"
+        - "32"
+        - "64"
+      default: "64"
+      examples:
+        - "64"
+
+    margin_block_start:
+      type: string
+      title: Margin top
+      description: Select top margin for the hero banner.
+      enum:
+        - "0"
+        - "8"
+        - "20"
+        - "32"
+        - "48"
+        - "64"
+        - "96"
+        - "128"
+      default: "0"
+      examples:
+        - "0"
+
+    margin_block_end:
+      type: string
+      title: Margin bottom
+      description: Select bottom margin for the hero banner.
+      enum:
+        - "0"
+        - "8"
+        - "20"
+        - "32"
+        - "48"
+        - "64"
+        - "96"
+        - "128"
+      default: "0"
+      examples:
+        - "0"
+
+    spacing:
+      type: string
+      title: Legacy spacing
+      description: Deprecated. Use padding top and padding bottom instead.
+      enum:
+        - compact
+        - default
+        - large
+      meta:enum:
+        compact: Compact
+        default: Default
+        large: Large
+      default: default
+      examples:
+        - default
+
+    show_primary_cta:
+      type: boolean
+      title: Show Primary CTA
+      description: Show or hide the primary CTA button.
+      default: false
+      examples:
+        - false
+
+    primary_cta_text:
+      type: string
+      title: Primary CTA Text
+      description: Text for the primary CTA button.
+      default: 'Request a Quote'
+      examples:
+        - 'Request a Quote'
+
+    primary_cta_url:
+      type: string
+      title: Primary CTA URL
+      description: URL for the primary CTA button.
+      default: '/request-quote'
+      examples:
+        - '/request-quote'
+
+    show_secondary_cta:
+      type: boolean
+      title: Show Secondary CTA
+      description: Show or hide the secondary CTA button.
+      default: false
+      examples:
+        - false
+
+    secondary_cta_text:
+      type: string
+      title: Secondary CTA Text
+      description: Text for the secondary CTA button.
+      default: 'View Products'
+      examples:
+        - 'View Products'
+
+    secondary_cta_url:
+      type: string
+      title: Secondary CTA URL
+      description: URL for the secondary CTA button.
+      default: '/products'
+      examples:
+        - '/products'

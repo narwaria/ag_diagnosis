@@ -1,0 +1,251 @@
+{#
+/**
+ * @file
+ * Ag Hero Banner component.
+ */
+#}
+
+{% set background_classes = {
+  'dark': 'bg-slate-950 text-white',
+  'orange': 'bg-orange-700 text-white',
+  'light': 'bg-slate-50 text-slate-900',
+  'kraft': 'bg-amber-100 text-slate-950',
+  'gradient': 'bg-gradient-to-br from-slate-950 via-slate-900 to-orange-900 text-white',
+  'white': 'bg-white text-slate-950',
+  'paper': 'bg-stone-100 text-slate-950',
+  'charcoal': 'bg-zinc-950 text-white',
+  'navy': 'bg-blue-950 text-white',
+  'emerald': 'bg-emerald-900 text-white',
+  'copper': 'bg-gradient-to-br from-orange-950 via-stone-900 to-amber-800 text-white',
+  'sunrise': 'bg-gradient-to-br from-orange-600 via-amber-400 to-yellow-300 text-slate-950',
+  'cool': 'bg-gradient-to-br from-slate-950 via-blue-950 to-cyan-900 text-white'
+} %}
+
+{% set eyebrow_classes = {
+  'dark': 'bg-orange-500/15 text-orange-300 ring-orange-400/30',
+  'orange': 'bg-white/15 text-white ring-white/30',
+  'light': 'bg-orange-100 text-orange-700 ring-orange-200',
+  'kraft': 'bg-orange-200 text-orange-900 ring-orange-300',
+  'gradient': 'bg-orange-500/15 text-orange-300 ring-orange-400/30',
+  'white': 'bg-orange-100 text-orange-700 ring-orange-200',
+  'paper': 'bg-amber-200 text-amber-900 ring-amber-300',
+  'charcoal': 'bg-white/10 text-slate-200 ring-white/20',
+  'navy': 'bg-sky-400/15 text-sky-200 ring-sky-300/30',
+  'emerald': 'bg-emerald-400/15 text-emerald-100 ring-emerald-300/30',
+  'copper': 'bg-amber-400/15 text-amber-100 ring-amber-300/30',
+  'sunrise': 'bg-white/35 text-orange-950 ring-white/45',
+  'cool': 'bg-cyan-400/15 text-cyan-100 ring-cyan-300/30'
+} %}
+
+{% set description_classes = {
+  'dark': 'text-slate-300',
+  'orange': 'text-orange-50',
+  'light': 'text-slate-600',
+  'kraft': 'text-slate-700',
+  'gradient': 'text-slate-300',
+  'white': 'text-slate-600',
+  'paper': 'text-stone-700',
+  'charcoal': 'text-slate-300',
+  'navy': 'text-sky-100',
+  'emerald': 'text-emerald-50',
+  'copper': 'text-amber-50',
+  'sunrise': 'text-orange-950',
+  'cool': 'text-cyan-50'
+} %}
+
+{% set updated_classes = {
+  'dark': 'text-slate-400',
+  'orange': 'text-orange-100',
+  'light': 'text-slate-500',
+  'kraft': 'text-slate-600',
+  'gradient': 'text-slate-400',
+  'white': 'text-slate-500',
+  'paper': 'text-stone-500',
+  'charcoal': 'text-slate-400',
+  'navy': 'text-sky-200',
+  'emerald': 'text-emerald-100',
+  'copper': 'text-amber-100',
+  'sunrise': 'text-orange-900',
+  'cool': 'text-cyan-100'
+} %}
+
+{% set spacing_classes = {
+  'compact': 'py-12 lg:py-16',
+  'default': 'py-16 lg:py-24',
+  'large': 'py-20 lg:py-32'
+} %}
+
+{% set padding_block_start_classes = {
+  '0': 'pt-0',
+  '16': 'pt-4',
+  '32': 'pt-6 md:pt-7 xl:pt-8',
+  '64': 'pt-10 md:pt-13 xl:pt-16'
+} %}
+
+{% set padding_block_end_classes = {
+  '0': 'pb-0',
+  '16': 'pb-4',
+  '32': 'pb-6 md:pb-7 xl:pb-8',
+  '64': 'pb-10 md:pb-13 xl:pb-16'
+} %}
+
+{% set margin_block_start_classes = {
+  '0': 'mt-0',
+  '8': 'mt-2',
+  '20': 'mt-5',
+  '32': 'mt-6 md:mt-7 xl:mt-8',
+  '48': 'mt-8 md:mt-10 xl:mt-12',
+  '64': 'mt-10 md:mt-13 xl:mt-16',
+  '96': 'mt-16 md:mt-20 xl:mt-24',
+  '128': 'mt-20 md:mt-24 xl:mt-32'
+} %}
+
+{% set margin_block_end_classes = {
+  '0': 'mb-0',
+  '8': 'mb-2',
+  '20': 'mb-5',
+  '32': 'mb-6 md:mb-7 xl:mb-8',
+  '48': 'mb-8 md:mb-10 xl:mb-12',
+  '64': 'mb-10 md:mb-13 xl:mb-16',
+  '96': 'mb-16 md:mb-20 xl:mb-24',
+  '128': 'mb-20 md:mb-24 xl:mb-32'
+} %}
+
+{% set width_classes = {
+  'narrow': 'max-w-2xl',
+  'default': 'max-w-3xl',
+  'wide': 'max-w-5xl'
+} %}
+
+{% set heading_classes = {
+  'default': 'heading-responsive-6xl',
+  'heading-responsive-8xl': 'heading-responsive-8xl',
+  'heading-responsive-7xl': 'heading-responsive-7xl',
+  'heading-responsive-6xl': 'heading-responsive-6xl',
+  'heading-responsive-5xl': 'heading-responsive-5xl',
+  'heading-responsive-4xl': 'heading-responsive-4xl',
+  'heading-responsive-3xl': 'heading-responsive-3xl',
+  'heading-responsive-2xl': 'heading-responsive-2xl',
+  'heading-responsive-xl': 'heading-responsive-xl'
+} %}
+
+{% set description_text_size_classes = {
+  'text-xs': 'text-xs',
+  'text-sm': 'text-sm',
+  'normal': 'text-base',
+  'text-lg': 'text-lg',
+  'text-xl': 'text-xl',
+  'text-2xl': 'text-2xl',
+  'text-3xl': 'text-3xl'
+} %}
+
+{% set alignment_classes = {
+  'left': 'text-left',
+  'center': 'text-center mx-auto',
+  'right': 'text-right ml-auto'
+} %}
+
+{% set cta_alignment_classes = {
+  'left': 'justify-start',
+  'center': 'justify-center',
+  'right': 'justify-end'
+} %}
+
+{% set requested_bg_variant = background_variant|default('dark') %}
+{% set bg_variant = requested_bg_variant in background_classes|keys ? requested_bg_variant : 'dark' %}
+{% set requested_text_size = text_size|default('heading-responsive-6xl') %}
+{% set heading_class = requested_text_size in heading_classes|keys ? heading_classes[requested_text_size] : heading_classes['default'] %}
+{% set requested_description_text_size = description_text_size|default('text-lg') %}
+{% set description_text_size_class = requested_description_text_size in description_text_size_classes|keys ? description_text_size_classes[requested_description_text_size] : description_text_size_classes['text-lg'] %}
+{% set requested_padding_block_start = padding_block_start|default('64') %}
+{% set requested_padding_block_end = padding_block_end|default('64') %}
+{% set padding_block_start_class = requested_padding_block_start in padding_block_start_classes|keys ? padding_block_start_classes[requested_padding_block_start] : padding_block_start_classes['64'] %}
+{% set padding_block_end_class = requested_padding_block_end in padding_block_end_classes|keys ? padding_block_end_classes[requested_padding_block_end] : padding_block_end_classes['64'] %}
+{% set requested_margin_block_start = margin_block_start|default('0') %}
+{% set requested_margin_block_end = margin_block_end|default('0') %}
+{% set margin_block_start_class = requested_margin_block_start in margin_block_start_classes|keys ? margin_block_start_classes[requested_margin_block_start] : margin_block_start_classes['0'] %}
+{% set margin_block_end_class = requested_margin_block_end in margin_block_end_classes|keys ? margin_block_end_classes[requested_margin_block_end] : margin_block_end_classes['0'] %}
+{% set align = text_alignment|default('left') %}
+
+<section class="relative overflow-hidden {{ margin_block_start_class }} {{ margin_block_end_class }} {{ background_classes[bg_variant] }}">
+  {% if bg_variant in ['dark', 'gradient', 'charcoal', 'copper', 'cool'] %}
+    <div class="absolute inset-0 opacity-20">
+      <div class="absolute -left-20 top-10 h-72 w-72 rounded-full bg-orange-500 blur-3xl"></div>
+      <div class="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-yellow-500 blur-3xl"></div>
+    </div>
+  {% endif %}
+
+  {% if bg_variant == 'orange' %}
+    <div class="absolute inset-0 opacity-20">
+      <div class="absolute -right-24 top-0 h-80 w-80 rounded-full bg-white blur-3xl"></div>
+      <div class="absolute bottom-0 left-0 h-72 w-72 rounded-full bg-yellow-300 blur-3xl"></div>
+    </div>
+  {% endif %}
+
+  {% if bg_variant in ['navy', 'emerald'] %}
+    <div class="absolute inset-0 opacity-20">
+      <div class="absolute -right-24 top-0 h-80 w-80 rounded-full bg-white blur-3xl"></div>
+      <div class="absolute bottom-0 left-0 h-72 w-72 rounded-full bg-cyan-300 blur-3xl"></div>
+    </div>
+  {% endif %}
+
+  {% if bg_variant in ['kraft', 'paper'] %}
+    <div class="absolute inset-0 opacity-30">
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(120,53,15,0.18)_1px,transparent_0)] bg-[length:18px_18px]"></div>
+    </div>
+  {% endif %}
+
+  <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 {{ padding_block_start_class }} {{ padding_block_end_class }}">
+    <div class="{{ width_classes[layout_width|default('default')] }} {{ alignment_classes[align] }}">
+
+      {% if show_eyebrow and eyebrow %}
+        <span class="inline-flex rounded-full px-4 py-1.5 text-sm font-semibold ring-1 {{ eyebrow_classes[bg_variant] }}">
+          {{ eyebrow }}
+        </span>
+      {% endif %}
+
+      {% if heading %}
+        <h1 class="mt-6 font-extrabold tracking-tight {{ heading_class }}">
+          {{ heading }}
+        </h1>
+      {% endif %}
+
+      {% if description %}
+        <div class="ag-hero-banner__description mt-6 max-w-2xl leading-8 {{ description_text_size_class }} {{ description_classes[bg_variant] }} {% if align == 'center' %}mx-auto{% elseif align == 'right' %}ml-auto{% endif %}">
+          {{ description }}
+        </div>
+      {% endif %}
+
+      {% if show_updated_text and updated_text %}
+        <p class="mt-5 text-sm font-medium {{ updated_classes[bg_variant] }}">
+          {{ updated_text }}
+        </p>
+      {% endif %}
+
+      {% if show_primary_cta or show_secondary_cta %}
+        <div class="mt-8 flex flex-col gap-4 sm:flex-row {{ cta_alignment_classes[align] }}">
+
+          {% if show_primary_cta and primary_cta_text and primary_cta_url %}
+            <a
+              href="{{ primary_cta_url }}"
+              class="inline-flex justify-center rounded-full bg-orange-600 px-7 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-orange-700"
+            >
+              {{ primary_cta_text }}
+            </a>
+          {% endif %}
+
+          {% if show_secondary_cta and secondary_cta_text and secondary_cta_url %}
+            <a
+              href="{{ secondary_cta_url }}"
+              class="inline-flex justify-center rounded-full bg-white px-7 py-3 text-sm font-bold text-slate-900 shadow-sm ring-1 ring-slate-200 transition hover:bg-slate-100"
+            >
+              {{ secondary_cta_text }}
+            </a>
+          {% endif %}
+
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
+</section>

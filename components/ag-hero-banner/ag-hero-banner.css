@@ -1,0 +1,29 @@
+.ag-hero-banner__description > *:first-child {
+  margin-top: 0;
+}
+
+.ag-hero-banner__description > *:last-child {
+  margin-bottom: 0;
+}
+
+.ag-hero-banner__description > * + * {
+  margin-top: 0.75rem;
+}
+
+.ag-hero-banner__description ul,
+.ag-hero-banner__description ol {
+  padding-left: 1.25rem;
+}
+
+.ag-hero-banner__description ul {
+  list-style: disc;
+}
+
+.ag-hero-banner__description ol {
+  list-style: decimal;
+}
+
+.ag-hero-banner__description a {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}

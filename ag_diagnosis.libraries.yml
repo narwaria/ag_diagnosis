@@ -15,6 +15,9 @@ global:
       css/components/cards.css: {}
 
     theme:
+      build/main.min.css:
+        preprocess: false
+        minified: true
       css/theme/colors.css: {}
       css/theme/theme.css: {}
 
