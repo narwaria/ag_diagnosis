@@ -1,2 +1,1 @@
-.navbar--logo img { max-height: 8rem; }
-.navbar-modal .navbar--modal-logo img { max-height: 8rem; }
+.navbar--logo img, .navbar--modal-logo img { max-height: 8rem; }
