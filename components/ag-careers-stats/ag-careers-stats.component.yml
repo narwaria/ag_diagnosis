@@ -1,0 +1,134 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/11.x/core/assets/schemas/v1/component.schema.json
+
+name: AG Careers Stats
+description: Displays a floating careers statistics or values strip below the hero section.
+status: stable
+group: Ambey Global
+
+props:
+  type: object
+  properties:
+    aria_label:
+      type: string
+      title: Accessible label
+      description: Label used by assistive technology for this stats section.
+      default: Careers highlights
+      examples:
+        - Careers highlights
+    columns_mobile:
+      type: string
+      title: Mobile columns
+      description: Number of stat columns on small screens.
+      enum:
+        - '1'
+        - '2'
+      meta:enum:
+        '1': 1 column
+        '2': 2 columns
+      default: '2'
+      examples:
+        - '2'
+    columns_desktop:
+      type: string
+      title: Desktop columns
+      description: Number of stat columns on large screens.
+      enum:
+        - '2'
+        - '3'
+        - '4'
+        - '5'
+        - '6'
+      meta:enum:
+        '2': 2 columns
+        '3': 3 columns
+        '4': 4 columns
+        '5': 5 columns
+        '6': 6 columns
+      default: '4'
+      examples:
+        - '4'
+    overlap_hero:
+      type: boolean
+      title: Overlap previous section
+      description: Pulls the stats card upward so it can overlap the hero section.
+      default: true
+      examples:
+        - true
+    spacing:
+      type: string
+      title: Spacing
+      description: Controls the card padding and distance between stat items.
+      enum:
+        - compact
+        - default
+        - spacious
+      meta:enum:
+        compact: Compact
+        default: Default
+        spacious: Spacious
+      default: default
+      examples:
+        - default
+    surface_depth:
+      type: string
+      title: Surface depth
+      description: Controls how strongly the stats card is elevated from the page.
+      enum:
+        - flat
+        - raised
+        - floating
+      meta:enum:
+        flat: Flat
+        raised: Raised
+        floating: Floating
+      default: floating
+      examples:
+        - floating
+    theme:
+      type: string
+      title: Theme
+      description: Visual theme for the stats card.
+      enum:
+        - light
+        - soft-orange
+        - warm-cream
+        - cool-mist
+        - slate-dark
+        - charcoal-orange
+        - forest-dark
+        - midnight-blue
+      meta:enum:
+        light: Light
+        soft-orange: Soft orange
+        warm-cream: Warm cream
+        cool-mist: Cool mist
+        slate-dark: Slate dark
+        charcoal-orange: Charcoal orange
+        forest-dark: Forest dark
+        midnight-blue: Midnight blue
+      default: light
+      examples:
+        - light
+
+slots:
+  stats:
+    title: Stats
+    description: Add one or more Careers Stat components.
+
+examples:
+  default:
+    props:
+      aria_label: Careers highlights
+      columns_mobile: '2'
+      columns_desktop: '4'
+      overlap_hero: true
+      spacing: default
+      surface_depth: floating
+      theme: light
+    slots:
+      stats: []
+
+libraryOverrides:
+  css:
+    component:
+      ag-careers-stats.css: {}

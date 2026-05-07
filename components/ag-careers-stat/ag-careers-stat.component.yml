@@ -1,0 +1,121 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/11.x/core/assets/schemas/v1/component.schema.json
+
+name: AG Careers Stat
+description: Displays one careers statistic or value item for the Careers Stats slot.
+status: stable
+group: Ambey Global
+
+props:
+  type: object
+  required:
+    - heading
+    - body
+  properties:
+    heading:
+      type: string
+      title: Heading
+      examples:
+        - Quality
+    level:
+      type: number
+      title: Heading level
+      enum: [1, 2, 3, 4, 5, 6]
+      default: 3
+      examples:
+        - 3
+    icon:
+      type: string
+      title: Icon name
+      description: 'Optional icon ID from the <a href="https://phosphoricons.com" target="_blank">Phosphor Icons</a> library.'
+      examples:
+        - rocket
+    icon_size:
+      type: string
+      title: Icon size
+      enum:
+        - extra-small
+        - small
+        - medium
+        - large
+        - extra-large
+      meta:enum:
+        extra-small: Extra small
+        small: Small
+        medium: Medium
+        large: Large
+        extra-large: Extra large
+      default: small
+      examples:
+        - small
+    icon_position:
+      type: string
+      title: Icon position
+      enum:
+        - above
+        - before
+        - after
+      meta:enum:
+        above: Above heading
+        before: Before heading
+        after: After heading
+      default: above
+      examples:
+        - above
+    text_size:
+      type: string
+      title: Text size
+      description: Controls the heading text size.
+      enum:
+        - default
+        - heading-responsive-8xl
+        - heading-responsive-7xl
+        - heading-responsive-6xl
+        - heading-responsive-5xl
+        - heading-responsive-4xl
+        - heading-responsive-3xl
+        - heading-responsive-2xl
+        - heading-responsive-xl
+      meta:enum:
+        default: Default
+        heading-responsive-8xl: Responsive 8XL
+        heading-responsive-7xl: Responsive 7XL
+        heading-responsive-6xl: Responsive 6XL
+        heading-responsive-5xl: Responsive 5XL
+        heading-responsive-4xl: Responsive 4XL
+        heading-responsive-3xl: Responsive 3XL
+        heading-responsive-2xl: Responsive 2XL
+        heading-responsive-xl: Responsive XL
+      default: default
+      examples:
+        - default
+    body:
+      type: string
+      title: Body
+      description: Rich text content displayed below the heading. HTML is supported.
+      contentMediaType: text/html
+      x-formatting-context: block
+      examples:
+        - Focused Work
+    body_text_size:
+      type: string
+      title: Body text size
+      description: Controls the body text size.
+      enum:
+        - text-xs
+        - text-sm
+        - normal
+        - text-lg
+        - text-xl
+        - text-2xl
+        - text-3xl
+      meta:enum:
+        text-xs: 12px
+        text-sm: 14px
+        normal: 16px (default)
+        text-lg: 18px
+        text-xl: 20px
+        text-2xl: 24px
+        text-3xl: 32px
+      default: normal
+      examples:
+        - normal

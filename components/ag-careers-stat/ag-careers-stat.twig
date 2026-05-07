@@ -1,0 +1,100 @@
+{#
+/**
+ * @file
+ * Careers Stat component.
+ *
+ * Props:
+ * - heading
+ * - level
+ * - icon
+ * - icon_size
+ * - icon_position
+ * - body
+ * - text_size
+ * - body_text_size
+ */
+#}
+
+{% set level = level|default(3) %}
+{% set text_size = text_size|default('default') %}
+{% set body_text_size = body_text_size|default('normal') %}
+{% set icon_size = icon_size|default('small') %}
+{% set icon_position = icon_position|default('above') %}
+
+{% set heading_levels = [1, 2, 3, 4, 5, 6] %}
+{% set heading_level = level in heading_levels ? level : 3 %}
+
+{% set heading_text_size_classes = {
+  'default': 'text-3xl lg:text-4xl',
+  'heading-responsive-8xl': 'heading-responsive-8xl',
+  'heading-responsive-7xl': 'heading-responsive-7xl',
+  'heading-responsive-6xl': 'heading-responsive-6xl',
+  'heading-responsive-5xl': 'heading-responsive-5xl',
+  'heading-responsive-4xl': 'heading-responsive-4xl',
+  'heading-responsive-3xl': 'heading-responsive-3xl',
+  'heading-responsive-2xl': 'heading-responsive-2xl',
+  'heading-responsive-xl': 'heading-responsive-xl'
+} %}
+
+{% set body_text_size_classes = {
+  'text-xs': 'text-xs',
+  'text-sm': 'text-sm',
+  'normal': 'text-base',
+  'text-lg': 'text-lg',
+  'text-xl': 'text-xl',
+  'text-2xl': 'text-2xl',
+  'text-3xl': 'text-3xl'
+} %}
+
+{% set icon_size_map = {
+  'extra-small': 20,
+  'small': 24,
+  'medium': 32,
+  'large': 48,
+  'extra-large': 64
+} %}
+
+{% set heading_text_size_class = text_size in heading_text_size_classes|keys ? heading_text_size_classes[text_size] : heading_text_size_classes.default %}
+{% set body_text_size_class = body_text_size in body_text_size_classes|keys ? body_text_size_classes[body_text_size] : body_text_size_classes.normal %}
+{% set resolved_icon_size = icon_size_map[icon_size]|default(icon_size_map.small) %}
+{% set has_icon = icon is defined and icon is not empty %}
+{% set heading_content_classes = [
+  'ag-careers-stat__heading-content',
+  has_icon ? 'ag-careers-stat__heading-content--' ~ icon_position
+] %}
+
+<div class="ag-careers-stat text-center">
+  {% if heading %}
+    <dt class="ag-careers-stat__value">
+      <h{{ heading_level }} class="{{ heading_text_size_class }} font-black">
+        <span class="{{ heading_content_classes|filter(class => class)|join(' ') }}">
+          {% if has_icon and icon_position == 'above' %}
+            <span class="ag-careers-stat__icon" aria-hidden="true">
+              {{ icon('phosphor', icon, { size: resolved_icon_size, color: 'currentColor', alt: '' }) }}
+            </span>
+          {% endif %}
+
+          {% if has_icon and icon_position == 'before' %}
+            <span class="ag-careers-stat__icon" aria-hidden="true">
+              {{ icon('phosphor', icon, { size: resolved_icon_size, color: 'currentColor', alt: '' }) }}
+            </span>
+          {% endif %}
+
+          <span>{{ heading }}</span>
+
+          {% if has_icon and icon_position == 'after' %}
+            <span class="ag-careers-stat__icon" aria-hidden="true">
+              {{ icon('phosphor', icon, { size: resolved_icon_size, color: 'currentColor', alt: '' }) }}
+            </span>
+          {% endif %}
+        </span>
+      </h{{ heading_level }}>
+    </dt>
+  {% endif %}
+
+  {% if body %}
+    <dd class="ag-careers-stat__label mt-2 {{ body_text_size_class }} [&_p]:mt-2 [&_p:first-child]:mt-0">
+      {{ body|raw }}
+    </dd>
+  {% endif %}
+</div>

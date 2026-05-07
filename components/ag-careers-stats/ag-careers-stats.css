@@ -1,0 +1,176 @@
+.ag-careers-stats {
+  position: relative;
+  z-index: 30;
+  isolation: isolate;
+  --ag-careers-stats-card-bg: #ffffff;
+  --ag-careers-stats-card-border: #ffedd5;
+  --ag-careers-stats-value: #ea580c;
+  --ag-careers-stats-label: #6b7280;
+  --ag-careers-stats-shadow: rgba(15, 23, 42, 0.12);
+  --ag-careers-stats-shadow-y: 24px;
+  --ag-careers-stats-shadow-blur: 50px;
+}
+
+.ag-careers-stats__card {
+  position: relative;
+  z-index: 1;
+  background: var(--ag-careers-stats-card-bg);
+  border-color: var(--ag-careers-stats-card-border);
+}
+
+.ag-careers-stats__grid {
+  display: grid;
+}
+
+.ag-careers-stats__grid--mobile-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+.ag-careers-stats__grid--mobile-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.ag-careers-stats__grid--compact {
+  gap: 1rem;
+}
+
+.ag-careers-stats__grid--default {
+  gap: 1.5rem;
+}
+
+.ag-careers-stats__grid--spacious {
+  gap: 2rem;
+}
+
+.ag-careers-stats .shadow-xl {
+  box-shadow: 0 var(--ag-careers-stats-shadow-y) var(--ag-careers-stats-shadow-blur) var(--ag-careers-stats-shadow);
+}
+
+.ag-careers-stat__value {
+  color: var(--ag-careers-stats-value);
+}
+
+.ag-careers-stat__label {
+  color: var(--ag-careers-stats-label);
+}
+
+.ag-careers-stat__heading-content {
+  align-items: center;
+  display: inline-flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.ag-careers-stat__heading-content--above {
+  flex-direction: column;
+}
+
+.ag-careers-stat__heading-content--before,
+.ag-careers-stat__heading-content--after {
+  flex-direction: row;
+}
+
+.ag-careers-stat__icon {
+  color: var(--ag-careers-stats-value);
+  display: inline-flex;
+  flex: 0 0 auto;
+  line-height: 1;
+}
+
+.ag-careers-stats--flat {
+  --ag-careers-stats-shadow: rgba(15, 23, 42, 0);
+  --ag-careers-stats-shadow-y: 0;
+  --ag-careers-stats-shadow-blur: 0;
+}
+
+.ag-careers-stats--flat .shadow-xl {
+  box-shadow: none;
+}
+
+.ag-careers-stats--raised {
+  --ag-careers-stats-shadow-y: 12px;
+  --ag-careers-stats-shadow-blur: 28px;
+}
+
+.ag-careers-stats--floating {
+  --ag-careers-stats-shadow-y: 24px;
+  --ag-careers-stats-shadow-blur: 50px;
+}
+
+.ag-careers-stats--soft-orange {
+  --ag-careers-stats-card-bg: #fff7ed;
+  --ag-careers-stats-card-border: #fed7aa;
+  --ag-careers-stats-value: #c2410c;
+  --ag-careers-stats-label: #7c2d12;
+  --ag-careers-stats-shadow: rgba(194, 65, 12, 0.12);
+}
+
+.ag-careers-stats--warm-cream {
+  --ag-careers-stats-card-bg: #fffbeb;
+  --ag-careers-stats-card-border: #fde68a;
+  --ag-careers-stats-value: #b45309;
+  --ag-careers-stats-label: #713f12;
+  --ag-careers-stats-shadow: rgba(180, 83, 9, 0.12);
+}
+
+.ag-careers-stats--cool-mist {
+  --ag-careers-stats-card-bg: #f8fafc;
+  --ag-careers-stats-card-border: #cbd5e1;
+  --ag-careers-stats-value: #0369a1;
+  --ag-careers-stats-label: #475569;
+  --ag-careers-stats-shadow: rgba(15, 23, 42, 0.10);
+}
+
+.ag-careers-stats--slate-dark {
+  --ag-careers-stats-card-bg: #0f172a;
+  --ag-careers-stats-card-border: #334155;
+  --ag-careers-stats-value: #fb923c;
+  --ag-careers-stats-label: #cbd5e1;
+  --ag-careers-stats-shadow: rgba(15, 23, 42, 0.28);
+}
+
+.ag-careers-stats--charcoal-orange {
+  --ag-careers-stats-card-bg: #1c1917;
+  --ag-careers-stats-card-border: #7c2d12;
+  --ag-careers-stats-value: #fdba74;
+  --ag-careers-stats-label: #fed7aa;
+  --ag-careers-stats-shadow: rgba(28, 25, 23, 0.28);
+}
+
+.ag-careers-stats--forest-dark {
+  --ag-careers-stats-card-bg: #052e2b;
+  --ag-careers-stats-card-border: #0f766e;
+  --ag-careers-stats-value: #5eead4;
+  --ag-careers-stats-label: #ccfbf1;
+  --ag-careers-stats-shadow: rgba(5, 46, 43, 0.28);
+}
+
+.ag-careers-stats--midnight-blue {
+  --ag-careers-stats-card-bg: #111827;
+  --ag-careers-stats-card-border: #1d4ed8;
+  --ag-careers-stats-value: #93c5fd;
+  --ag-careers-stats-label: #dbeafe;
+  --ag-careers-stats-shadow: rgba(17, 24, 39, 0.30);
+}
+
+@media (min-width: 1024px) {
+  .ag-careers-stats__grid--desktop-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ag-careers-stats__grid--desktop-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .ag-careers-stats__grid--desktop-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .ag-careers-stats__grid--desktop-5 {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .ag-careers-stats__grid--desktop-6 {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}

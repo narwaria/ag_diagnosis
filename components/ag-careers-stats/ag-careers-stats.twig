@@ -1,0 +1,72 @@
+{#
+/**
+ * @file
+ * Careers Stats component.
+ *
+ * Props:
+ * - aria_label
+ * - columns_mobile
+ * - columns_desktop
+ * - overlap_hero
+ * - spacing
+ * - surface_depth
+ * - theme
+ *
+ * Available slots:
+ * - stats
+ */
+#}
+
+{% set aria_label = aria_label|default('Careers highlights') %}
+{% set columns_mobile = columns_mobile|default('2') %}
+{% set columns_desktop = columns_desktop|default('4') %}
+{% set overlap_hero = overlap_hero ?? true %}
+{% set spacing = spacing|default('default') %}
+{% set surface_depth = surface_depth|default('floating') %}
+{% set theme = theme|default('light') %}
+
+{% set spacing_classes = {
+  'compact': {
+    card: 'p-4 lg:p-6',
+    grid: 'ag-careers-stats__grid--compact'
+  },
+  'default': {
+    card: 'p-6 lg:p-8',
+    grid: 'ag-careers-stats__grid--default'
+  },
+  'spacious': {
+    card: 'p-8 lg:p-10',
+    grid: 'ag-careers-stats__grid--spacious'
+  }
+} %}
+
+{% set selected_spacing = spacing_classes[spacing] ?? spacing_classes.default %}
+
+{% set section_classes = [
+  'ag-careers-stats',
+  'ag-careers-stats--' ~ theme,
+  'ag-careers-stats--' ~ surface_depth,
+  overlap_hero ? '-mt-10',
+  'relative',
+  'z-30'
+] %}
+
+{% set grid_classes = [
+  'ag-careers-stats__grid',
+  'ag-careers-stats__grid--mobile-' ~ columns_mobile,
+  'ag-careers-stats__grid--desktop-' ~ columns_desktop,
+  selected_spacing.grid
+] %}
+
+<section class="{{ section_classes|filter(class => class)|join(' ') }}" aria-label="{{ aria_label }}">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="ag-careers-stats__card rounded-3xl shadow-xl border {{ selected_spacing.card }}">
+      <dl class="{{ grid_classes|join(' ') }}">
+        {% block stats %}
+          {{ stats }}
+        {% endblock %}
+
+      </dl>
+    </div>
+  </div>
+</section>
