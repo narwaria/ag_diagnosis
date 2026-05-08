@@ -18,7 +18,7 @@
     </div>
 
     {# Main navbar component #}
-    {% embed 'diagnosis:navbar'
+    {% embed 'ag_diagnosis:navbar'
       with {
         menu_align: 'right'
       }
@@ -30,7 +30,7 @@
         {# Menu container for both mobile and desktop #}
         {# Desktop: Only main menu visible (banner hidden via CSS since it shows above navbar) #}
         {# Mobile: Both menus visible (main first, then banner) #}
-        {% embed 'diagnosis:menu-container' %}
+        {% embed 'ag_diagnosis:menu-container' %}
           {% block main_menu %}
             {{ main_menu }}
           {% endblock %}
@@ -57,7 +57,7 @@
 
   {# Footer using footer SDC component #}
   <footer role="contentinfo" class="site-footer-wrapper">
-    {% embed 'diagnosis:footer'
+    {% embed 'ag_diagnosis:footer'
       with {
         align: true
       }

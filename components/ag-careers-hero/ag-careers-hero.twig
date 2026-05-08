@@ -1,0 +1,70 @@
+{#
+/**
+ * @file
+ * Careers Hero component.
+ *
+ * Props:
+ * - eyebrow
+ * - heading
+ * - description
+ * - primary_button_text
+ * - primary_button_url
+ * - secondary_button_text
+ * - secondary_button_url
+ * - extra_classes
+ */
+#}
+
+{% set eyebrow = eyebrow|default('Careers at Ambey Global') %}
+{% set heading = heading|default('Build your future in packaging manufacturing') %}
+{% set description = description|default('Join Ambey Global and become part of a growing corrugated box manufacturing company where people, quality, safety, and commitment matter every day.') %}
+{% set primary_button_text = primary_button_text|default('View Job Openings') %}
+{% set primary_button_url = primary_button_url|default('#openings') %}
+{% set secondary_button_text = secondary_button_text|default('Life at Ambey Global') %}
+{% set secondary_button_url = secondary_button_url|default('#life') %}
+{% set extra_classes = extra_classes|default('') %}
+
+<section class="ag-careers-hero hero-bg text-white {{ extra_classes }}">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
+    <div class="max-w-3xl">
+
+      {% if eyebrow %}
+        <div class="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-2 mb-6">
+          <span class="w-2.5 h-2.5 rounded-full bg-orange-400"></span>
+          <span class="text-sm font-semibold">{{ eyebrow }}</span>
+        </div>
+      {% endif %}
+
+      {% if heading %}
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black leading-tight">
+          {{ heading }}
+        </h1>
+      {% endif %}
+
+      {% if description %}
+        <p class="mt-6 text-lg sm:text-xl text-orange-50 leading-relaxed">
+          {{ description }}
+        </p>
+      {% endif %}
+
+      {% if primary_button_text or secondary_button_text %}
+        <div class="mt-8 flex flex-col sm:flex-row gap-4">
+
+          {% if primary_button_text %}
+            <a href="{{ primary_button_url }}" class="inline-flex justify-center bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-full font-bold shadow-lg transition">
+              {{ primary_button_text }}
+            </a>
+          {% endif %}
+
+          {% if secondary_button_text %}
+            <a href="{{ secondary_button_url }}" class="inline-flex justify-center bg-white hover:bg-orange-50 text-gray-900 px-8 py-4 rounded-full font-bold shadow-lg transition">
+              {{ secondary_button_text }}
+            </a>
+          {% endif %}
+
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
+</section>

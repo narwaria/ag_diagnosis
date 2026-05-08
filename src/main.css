@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import "./ag-base.main.css";
 
 @source "../components/**/*.twig";
 @source "../templates/**/*.twig";
@@ -10,9 +10,6 @@
 @source inline("{mt-0,mt-2,mt-5,mt-6,mt-8,mt-10,mt-16,mt-20,md:mt-7,md:mt-10,md:mt-13,md:mt-20,md:mt-24,xl:mt-8,xl:mt-12,xl:mt-16,xl:mt-24,xl:mt-32,mb-0,mb-2,mb-5,mb-6,mb-8,mb-10,mb-16,mb-20,md:mb-7,md:mb-10,md:mb-13,md:mb-20,md:mb-24,xl:mb-8,xl:mb-12,xl:mb-16,xl:mb-24,xl:mb-32}");
 @source inline("{bg-transparent,bg-emerald-600,bg-red-600,hover:bg-emerald-700,hover:bg-red-700,hover:bg-slate-800,hover:text-orange-900,px-0,py-0,px-6,px-8,py-4,text-red-700,underline,underline-offset-4}");
 @source inline("{list-disc,list-decimal,list-none,pl-0,pl-5}");
-
-@import "../components/ag-hero-banner/ag-hero-banner.css";
-@import "../components/ag-content-section/ag-content-section.css";
 
 @layer utilities {
   .heading-responsive-8xl {

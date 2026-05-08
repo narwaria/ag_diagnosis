@@ -114,7 +114,17 @@
 {% set width_classes = {
   'narrow': 'max-w-2xl',
   'default': 'max-w-3xl',
+  'wide': 'max-w-7xl'
+} %}
+
+{% set description_width_classes = {
+  'narrow': 'max-w-2xl',
+  'default': 'max-w-2xl',
   'wide': 'max-w-5xl'
+} %}
+
+{% set width_breakout_classes = {
+  'wide': 'ag-hero-banner__content--wide'
 } %}
 
 {% set heading_classes = {
@@ -165,9 +175,11 @@
 {% set requested_margin_block_end = margin_block_end|default('0') %}
 {% set margin_block_start_class = requested_margin_block_start in margin_block_start_classes|keys ? margin_block_start_classes[requested_margin_block_start] : margin_block_start_classes['0'] %}
 {% set margin_block_end_class = requested_margin_block_end in margin_block_end_classes|keys ? margin_block_end_classes[requested_margin_block_end] : margin_block_end_classes['0'] %}
+{% set requested_layout_width = layout_width|default('default') %}
+{% set selected_layout_width = requested_layout_width in width_classes|keys ? requested_layout_width : 'default' %}
 {% set align = text_alignment|default('left') %}
 
-<section class="relative overflow-hidden {{ margin_block_start_class }} {{ margin_block_end_class }} {{ background_classes[bg_variant] }}">
+<section class="relative overflow-hidden {{ margin_block_start_class }} {{ margin_block_end_class }} {{ background_classes[bg_variant] }} {{ width_breakout_classes[selected_layout_width]|default('') }}">
   {% if bg_variant in ['dark', 'gradient', 'charcoal', 'copper', 'cool'] %}
     <div class="absolute inset-0 opacity-20">
       <div class="absolute -left-20 top-10 h-72 w-72 rounded-full bg-orange-500 blur-3xl"></div>
@@ -196,7 +208,7 @@
   {% endif %}
 
   <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 {{ padding_block_start_class }} {{ padding_block_end_class }}">
-    <div class="{{ width_classes[layout_width|default('default')] }} {{ alignment_classes[align] }}">
+    <div class="{{ width_classes[selected_layout_width] }} {{ alignment_classes[align] }}">
 
       {% if show_eyebrow and eyebrow %}
         <span class="inline-flex rounded-full px-4 py-1.5 text-sm font-semibold ring-1 {{ eyebrow_classes[bg_variant] }}">
@@ -211,7 +223,7 @@
       {% endif %}
 
       {% if description %}
-        <div class="ag-hero-banner__description mt-6 max-w-2xl leading-8 {{ description_text_size_class }} {{ description_classes[bg_variant] }} {% if align == 'center' %}mx-auto{% elseif align == 'right' %}ml-auto{% endif %}">
+        <div class="ag-hero-banner__description mt-6 {{ description_width_classes[selected_layout_width] }} leading-8 {{ description_text_size_class }} {{ description_classes[bg_variant] }} {% if align == 'center' %}mx-auto{% elseif align == 'right' %}ml-auto{% endif %}">
           {{ description }}
         </div>
       {% endif %}

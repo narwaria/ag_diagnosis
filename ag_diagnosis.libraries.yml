@@ -15,13 +15,20 @@ global:
       css/components/cards.css: {}
 
     theme:
+      src/fonts.css:
+        preprocess: false
       build/main.min.css:
         preprocess: false
         minified: true
+      src/theme.css:
+        preprocess: false
       css/theme/colors.css: {}
       css/theme/theme.css: {}
 
   js:
+    components/navbar/navbar.js:
+      attributes:
+        type: module
     js/script.js: {}
 
   dependencies:

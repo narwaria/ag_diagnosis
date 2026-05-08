@@ -1,0 +1,61 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/11.x/core/assets/schemas/v1/component.schema.json
+
+name: Ag Careers Hero
+description: Hero banner section for Ambey Global careers page.
+status: stable
+group: Ambey Global
+
+props:
+  type: object
+  properties:
+    eyebrow:
+      type: string
+      title: Eyebrow text
+      description: Small label shown above the heading.
+      examples:
+        - Careers at Ambey Global
+
+    heading:
+      type: string
+      title: Heading
+      description: Main hero heading.
+      examples:
+        - Build your future in packaging manufacturing
+
+    description:
+      type: string
+      title: Description
+      description: Supporting hero description text.
+      examples:
+        - Join Ambey Global and become part of a growing corrugated box manufacturing company where people, quality, safety, and commitment matter every day.
+
+    primary_button_text:
+      type: string
+      title: Primary button text
+      examples:
+        - View Job Openings
+
+    primary_button_url:
+      type: string
+      title: Primary button URL
+      examples:
+        - "#openings"
+
+    secondary_button_text:
+      type: string
+      title: Secondary button text
+      examples:
+        - Life at Ambey Global
+
+    secondary_button_url:
+      type: string
+      title: Secondary button URL
+      examples:
+        - "#life"
+
+    extra_classes:
+      type: string
+      title: Extra classes
+      description: Optional extra CSS classes for the section wrapper.
+      examples:
+        - null

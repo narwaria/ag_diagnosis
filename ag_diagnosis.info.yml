@@ -8,6 +8,14 @@ base theme: diagnosis
 libraries:
   - ag_diagnosis/global
 
+libraries-override:
+  diagnosis/global:
+    css:
+      theme:
+        src/fonts.css: false
+        build/main.min.css: false
+        src/theme.css: false
+
 regions:
   header: Header
   primary_menu: Primary menu

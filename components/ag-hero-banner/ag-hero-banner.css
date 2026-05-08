@@ -1,3 +1,7 @@
+.ag-hero-banner__content--wide {
+  margin-inline: calc(50% - 50cqw);
+}
+
 .ag-hero-banner__description > *:first-child {
   margin-top: 0;
 }
