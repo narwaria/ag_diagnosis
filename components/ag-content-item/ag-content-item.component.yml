@@ -62,8 +62,13 @@ props:
       title: Section variant
       description: Choose the visual style for this content section.
       enum:
+        - ''
         - default
         - highlight
+      meta:enum:
+        '': Default
+        default: Default
+        highlight: Highlight
       default: default
       examples:
         - default

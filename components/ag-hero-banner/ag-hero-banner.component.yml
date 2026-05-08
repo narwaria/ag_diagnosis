@@ -17,6 +17,20 @@ props:
       examples:
         - 'Ambey Global'
 
+    eyebrow_style:
+      type: string
+      title: Eyebrow Style
+      description: Select the visual style for the eyebrow label.
+      enum:
+        - badge
+        - minimal
+      meta:enum:
+        badge: Badge
+        minimal: Minimal uppercase
+      default: badge
+      examples:
+        - minimal
+
     heading:
       type: string
       title: Heading
@@ -64,6 +78,30 @@ props:
       default: 'These Terms & Conditions govern the use of the Ambey Global website, product inquiries, quotations, orders, and packaging services.'
       examples:
         - 'These Terms & Conditions govern the use of the Ambey Global website, product inquiries, quotations, orders, and packaging services.'
+
+    right_description:
+      type: string
+      title: Right Description
+      description: Optional rich text displayed in the right side of the hero banner.
+      contentMediaType: text/html
+      x-formatting-context: block
+      examples:
+        - 'Add supporting hero content here.'
+
+    columns:
+      type: string
+      title: Grid layout
+      description: Layout selected applies on desktop and tablet.
+      enum:
+        - "100"
+        - "50-50"
+        - "75-25"
+        - "25-75"
+        - "67-33"
+        - "33-67"
+      examples:
+        - "100"
+      default: "100"
 
     description_text_size:
       type: string

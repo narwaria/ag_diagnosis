@@ -37,6 +37,11 @@
   'cool': 'bg-cyan-400/15 text-cyan-100 ring-cyan-300/30'
 } %}
 
+{% set eyebrow_style_classes = {
+  'badge': 'inline-flex rounded-full px-4 py-1.5 text-sm font-semibold ring-1',
+  'minimal': 'ag-hero-banner__eyebrow--minimal inline-flex text-sm font-extrabold uppercase'
+} %}
+
 {% set description_classes = {
   'dark': 'text-slate-300',
   'orange': 'text-orange-50',
@@ -161,6 +166,17 @@
   'right': 'justify-end'
 } %}
 
+{% set column_classes = {
+  '100': 'ag-hero-banner__layout--100',
+  '50-50': 'ag-hero-banner__layout--50-50',
+  '75-25': 'ag-hero-banner__layout--75-25',
+  '25-75': 'ag-hero-banner__layout--25-75',
+  '67-33': 'ag-hero-banner__layout--67-33',
+  '33-67': 'ag-hero-banner__layout--33-67',
+} %}
+
+{% set has_right_description = right_description is defined and right_description is not empty %}
+{% set has_right_content = has_right_description %}
 {% set requested_bg_variant = background_variant|default('dark') %}
 {% set bg_variant = requested_bg_variant in background_classes|keys ? requested_bg_variant : 'dark' %}
 {% set requested_text_size = text_size|default('heading-responsive-6xl') %}
@@ -178,6 +194,10 @@
 {% set requested_layout_width = layout_width|default('default') %}
 {% set selected_layout_width = requested_layout_width in width_classes|keys ? requested_layout_width : 'default' %}
 {% set align = text_alignment|default('left') %}
+{% set requested_columns = columns|default('100') %}
+{% set selected_columns = requested_columns in column_classes|keys ? requested_columns : '100' %}
+{% set requested_eyebrow_style = eyebrow_style|default('badge') %}
+{% set selected_eyebrow_style = requested_eyebrow_style in eyebrow_style_classes|keys ? requested_eyebrow_style : 'badge' %}
 
 <section class="relative overflow-hidden {{ margin_block_start_class }} {{ margin_block_end_class }} {{ background_classes[bg_variant] }} {{ width_breakout_classes[selected_layout_width]|default('') }}">
   {% if bg_variant in ['dark', 'gradient', 'charcoal', 'copper', 'cool'] %}
@@ -208,51 +228,65 @@
   {% endif %}
 
   <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 {{ padding_block_start_class }} {{ padding_block_end_class }}">
-    <div class="{{ width_classes[selected_layout_width] }} {{ alignment_classes[align] }}">
+    <div class="{{ has_right_content ? 'ag-hero-banner__layout ' ~ column_classes[selected_columns] : '' }}">
+      <div class="{{ width_classes[selected_layout_width] }} {{ alignment_classes[align] }}">
 
-      {% if show_eyebrow and eyebrow %}
-        <span class="inline-flex rounded-full px-4 py-1.5 text-sm font-semibold ring-1 {{ eyebrow_classes[bg_variant] }}">
-          {{ eyebrow }}
-        </span>
-      {% endif %}
+        {% if show_eyebrow and eyebrow %}
+          <span class="{{ eyebrow_style_classes[selected_eyebrow_style] }} {{ selected_eyebrow_style == 'badge' ? eyebrow_classes[bg_variant] : '' }}">
+            {{ eyebrow }}
+          </span>
+        {% endif %}
 
-      {% if heading %}
-        <h1 class="mt-6 font-extrabold tracking-tight {{ heading_class }}">
-          {{ heading }}
-        </h1>
-      {% endif %}
+        {% if heading %}
+          <h1 class="mt-6 font-extrabold tracking-tight {{ heading_class }}">
+            {{ heading }}
+          </h1>
+        {% endif %}
 
-      {% if description %}
-        <div class="ag-hero-banner__description mt-6 {{ description_width_classes[selected_layout_width] }} leading-8 {{ description_text_size_class }} {{ description_classes[bg_variant] }} {% if align == 'center' %}mx-auto{% elseif align == 'right' %}ml-auto{% endif %}">
-          {{ description }}
-        </div>
-      {% endif %}
+        {% if description %}
+          <div class="ag-hero-banner__description mt-6 {{ description_width_classes[selected_layout_width] }} leading-8 {{ description_text_size_class }} {{ description_classes[bg_variant] }} {% if align == 'center' %}mx-auto{% elseif align == 'right' %}ml-auto{% endif %}">
+            {{ description }}
+          </div>
+        {% endif %}
 
-      {% if show_updated_text and updated_text %}
-        <p class="mt-5 text-sm font-medium {{ updated_classes[bg_variant] }}">
-          {{ updated_text }}
-        </p>
-      {% endif %}
+        {% if show_updated_text and updated_text %}
+          <p class="mt-5 text-sm font-medium {{ updated_classes[bg_variant] }}">
+            {{ updated_text }}
+          </p>
+        {% endif %}
 
-      {% if show_primary_cta or show_secondary_cta %}
-        <div class="mt-8 flex flex-col gap-4 sm:flex-row {{ cta_alignment_classes[align] }}">
+        {% if show_primary_cta or show_secondary_cta %}
+          <div class="mt-8 flex flex-col gap-4 sm:flex-row {{ cta_alignment_classes[align] }}">
 
-          {% if show_primary_cta and primary_cta_text and primary_cta_url %}
-            <a
-              href="{{ primary_cta_url }}"
-              class="inline-flex justify-center rounded-full bg-orange-600 px-7 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-orange-700"
-            >
-              {{ primary_cta_text }}
-            </a>
-          {% endif %}
+            {% if show_primary_cta and primary_cta_text and primary_cta_url %}
+              <a
+                href="{{ primary_cta_url }}"
+                class="inline-flex justify-center rounded-full bg-orange-600 px-7 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-orange-700"
+              >
+                {{ primary_cta_text }}
+              </a>
+            {% endif %}
 
-          {% if show_secondary_cta and secondary_cta_text and secondary_cta_url %}
-            <a
-              href="{{ secondary_cta_url }}"
-              class="inline-flex justify-center rounded-full bg-white px-7 py-3 text-sm font-bold text-slate-900 shadow-sm ring-1 ring-slate-200 transition hover:bg-slate-100"
-            >
-              {{ secondary_cta_text }}
-            </a>
+            {% if show_secondary_cta and secondary_cta_text and secondary_cta_url %}
+              <a
+                href="{{ secondary_cta_url }}"
+                class="inline-flex justify-center rounded-full bg-white px-7 py-3 text-sm font-bold text-slate-900 shadow-sm ring-1 ring-slate-200 transition hover:bg-slate-100"
+              >
+                {{ secondary_cta_text }}
+              </a>
+            {% endif %}
+
+          </div>
+        {% endif %}
+
+      </div>
+
+      {% if has_right_content %}
+        <div class="ag-hero-banner__media">
+          {% if has_right_description %}
+            <div class="ag-hero-banner__right-description ag-hero-banner__description leading-8 {{ description_text_size_class }} {{ description_classes[bg_variant] }}">
+              {{ right_description }}
+            </div>
           {% endif %}
 
         </div>
