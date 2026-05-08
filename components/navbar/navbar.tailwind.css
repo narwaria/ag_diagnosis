@@ -26,6 +26,64 @@
   @apply pb-24 md:pb-0;
 }
 
+/* Main navigation hover and active underline */
+.navbar--main-menu > ul[data-level="1"] > li > .menu-link {
+  color: color-mix(in oklab, var(--foreground) 88%, transparent);
+  font-size: 1.2rem;
+  font-weight: 500;
+  line-height: 1.4;
+  position: relative;
+}
+
+.navbar--main-menu > ul[data-level="1"] > li > .menu-link::after {
+  background: linear-gradient(
+    180deg,
+    var(--primary) 0%,
+    var(--primary) 50%,
+    var(--color-orange-700) 50%,
+    var(--color-orange-700) 100%
+  );
+  border-radius: 999px;
+  bottom: calc(var(--spacing) * 0.75);
+  content: "";
+  height: 3px;
+  left: calc(var(--spacing) * 3);
+  position: absolute;
+  right: calc(var(--spacing) * 3);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 180ms ease;
+}
+
+.navbar--main-menu > ul[data-level="1"] > li > .menu-link:hover,
+.navbar--main-menu > ul[data-level="1"] > li > .menu-link:focus-visible,
+.navbar--main-menu > ul[data-level="1"] > li > .menu-link--active {
+  color: var(--primary);
+}
+
+.navbar--main-menu > ul[data-level="1"] > li > .menu-link:hover::after,
+.navbar--main-menu > ul[data-level="1"] > li > .menu-link:focus-visible::after,
+.navbar--main-menu > ul[data-level="1"] > li > .menu-link--active::after {
+  transform: scaleX(1);
+}
+
+.navbar--main-menu > ul[data-level="1"] > li > .menu-link:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--primary) 18%, transparent);
+  outline: none;
+}
+
+@media (max-width: 767px) {
+  .navbar--main-menu > ul[data-level="1"] > li > .menu-link::after {
+    display: none;
+  }
+
+  .navbar--main-menu > ul[data-level="1"] > li > .menu-link:hover,
+  .navbar--main-menu > ul[data-level="1"] > li > .menu-link:focus-visible,
+  .navbar--main-menu > ul[data-level="1"] > li > .menu-link--active {
+    background-color: color-mix(in oklab, var(--primary) 10%, transparent);
+  }
+}
+
 /* Dark mode: banner menu bar matches the main menu background */
 .dark .banner-menu-bar {
   background-color: var(--background);

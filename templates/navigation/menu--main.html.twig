@@ -20,14 +20,14 @@
 #}
 {% import _self as menus %}
 
-<nav class="relative flex justify-start" aria-label="{{ menu_label|default('Main navigation') }}">
+<nav class="navbar--main-menu relative flex justify-start" aria-label="{{ menu_label|default('Main navigation') }}">
   {{ menus.menu_links(items, attributes, 0) }}
 </nav>
 
 {% macro menu_links(items, attributes, menu_level) %}
   {% import _self as menus %}
   {% if items %}
-    <ul class="flex w-full flex-col gap-1 p-0 md:w-auto md:flex-row" data-level="{{ menu_level + 1 }}">
+    <ul class="flex w-full flex-col gap-1 p-0 md:w-auto md:flex-row md:items-center md:gap-3" data-level="{{ menu_level + 1 }}">
       {% for item in items %}
         {% set has_children = item.below ? true : false %}
         {% set title = item.title is not empty ? item.title : item.text %}
@@ -39,10 +39,9 @@
 
         {% set item_classes =
           [
-            item.in_active_trail ? 'bg-muted/50' : '',
             has_children ? 'menu-item--has-children' : '',
             'flex flex-wrap justify-between md:flex-nowrap md:relative',
-            'w-full md:w-auto text-base font-medium rounded-md'
+            'w-full md:w-auto text-base font-medium'
           ]|filter(c => c is not empty)
         %}
 
@@ -51,7 +50,7 @@
           {% if url is not empty %}
             <a
               href="{{ url }}"
-              class="menu-link flex min-h-[44px] shrink-1 grow-1 items-center gap-2 rounded-md p-2 duration-300 md:min-h-auto hover:md:bg-primary hover:md:text-primary-foreground focus:md:bg-primary focus:md:text-primary-foreground xl:px-3 {{ item.in_active_trail ? 'md:bg-primary md:text-primary-foreground' : '' }}"
+              class="menu-link flex min-h-[44px] shrink-1 grow-1 items-center gap-2 rounded-sm px-3 py-2 no-underline transition-colors duration-200 md:min-h-auto xl:px-3 {{ item.in_active_trail ? 'menu-link--active' : '' }}"
               data-level="{{ menu_level + 1 }}"
               {% if item.in_active_trail %}aria-current="page"{% endif %}
             >
