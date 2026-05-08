@@ -45,17 +45,28 @@
           ]|filter(c => c is not empty)
         %}
 
-        <li class="{{ item_classes|join(' ') }}" data-level="{{ menu_level + 1 }}">
+        {% set link_classes =
+          [
+            'menu-link',
+            'flex min-h-[44px] shrink-1 grow-1 items-center gap-2 rounded-sm px-3 py-2 no-underline transition-colors duration-200 md:min-h-auto xl:px-3',
+            item.in_active_trail ? 'menu-link--active' : '',
+          ]|filter(c => c is not empty)
+        %}
+
+        <li{{ item.attributes.addClass(item_classes).setAttribute('data-level', menu_level + 1) }}>
           {# Parent link - always clickable #}
           {% if url is not empty %}
-            <a
-              href="{{ url }}"
-              class="menu-link flex min-h-[44px] shrink-1 grow-1 items-center gap-2 rounded-sm px-3 py-2 no-underline transition-colors duration-200 md:min-h-auto xl:px-3 {{ item.in_active_trail ? 'menu-link--active' : '' }}"
-              data-level="{{ menu_level + 1 }}"
-              {% if item.in_active_trail %}aria-current="page"{% endif %}
-            >
-              <span class="menu-link--text">{{ title }}</span>
-            </a>
+            {{
+              link(
+                title,
+                item.url,
+                {
+                  class: link_classes,
+                  'data-level': menu_level + 1,
+                  'aria-current': item.in_active_trail ? 'page' : null,
+                }
+              )
+            }}
           {% endif %}
 
           {# Expand button - toggles submenu on both mobile and desktop #}
