@@ -175,8 +175,9 @@
   '33-67': 'ag-hero-banner__layout--33-67',
 } %}
 
+{% set has_media = media is defined and media is iterable and media.src is defined and media.src is not empty %}
 {% set has_right_description = right_description is defined and right_description is not empty %}
-{% set has_right_content = has_right_description %}
+{% set has_right_content = has_right_description or has_media %}
 {% set requested_bg_variant = background_variant|default('dark') %}
 {% set bg_variant = requested_bg_variant in background_classes|keys ? requested_bg_variant : 'dark' %}
 {% set requested_text_size = text_size|default('heading-responsive-6xl') %}
@@ -283,8 +284,28 @@
 
       {% if has_right_content %}
         <div class="ag-hero-banner__media">
+
+          {% if has_media %}
+            {{
+              include(
+                'canvas:image',
+                {
+                  src: media.src,
+                  alt: media.alt,
+                  class: 'h-full w-full object-cover',
+                  width: media.width,
+                  height: media.height,
+                  loading: 'eager',
+                  sizes: '(min-width: 1024px) 42vw, 100vw'
+                },
+                false,
+                true
+              )
+            }}
+          {% endif %}
+
           {% if has_right_description %}
-            <div class="ag-hero-banner__right-description ag-hero-banner__description leading-8 {{ description_text_size_class }} {{ description_classes[bg_variant] }}">
+            <div class="ag-hero-banner__right-description ag-hero-banner__description leading-8 {{ description_text_size_class }} ">
               {{ right_description }}
             </div>
           {% endif %}
