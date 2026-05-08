@@ -89,6 +89,10 @@
   background-color: var(--background);
 }
 
+.banner-menu-link--active {
+  color: var(--color-orange-600);
+}
+
 /* External region styling */
 .region-header {
   .navbar--modal-top {
