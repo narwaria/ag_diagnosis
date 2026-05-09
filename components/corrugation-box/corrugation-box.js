@@ -225,24 +225,42 @@
         renderer.setSize(viewer.clientWidth, viewer.clientHeight);
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        renderer.outputEncoding = THREE.sRGBEncoding;
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.08;
 
         viewer.appendChild(renderer.domElement);
 
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
+        const ambientLight = new THREE.AmbientLight(0xfff2df, 0.46);
         scene.add(ambientLight);
 
-        const keyLight = new THREE.DirectionalLight(0xffffff, 0.9);
-        keyLight.position.set(240, 420, 260);
+        const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0x3f2b1d, 0.55);
+        scene.add(hemisphereLight);
+
+        const keyLight = new THREE.DirectionalLight(0xffffff, 1.18);
+        keyLight.position.set(280, 460, 320);
         keyLight.castShadow = true;
+        keyLight.shadow.mapSize.width = 2048;
+        keyLight.shadow.mapSize.height = 2048;
+        keyLight.shadow.camera.near = 1;
+        keyLight.shadow.camera.far = 900;
+        keyLight.shadow.camera.left = -360;
+        keyLight.shadow.camera.right = 360;
+        keyLight.shadow.camera.top = 360;
+        keyLight.shadow.camera.bottom = -360;
         scene.add(keyLight);
 
-        const fillLight = new THREE.PointLight(0xffb86b, 0.8, 900);
-        fillLight.position.set(-220, 180, 260);
+        const rimLight = new THREE.DirectionalLight(0xffb86b, 0.58);
+        rimLight.position.set(-260, 160, -240);
+        scene.add(rimLight);
+
+        const fillLight = new THREE.PointLight(0xffb86b, 0.7, 900);
+        fillLight.position.set(-260, 180, 280);
         scene.add(fillLight);
 
         const floorGeometry = new THREE.PlaneGeometry(900, 900);
         const floorMaterial = new THREE.ShadowMaterial({
-          opacity: 0.18,
+          opacity: 0.22,
         });
         const floor = new THREE.Mesh(floorGeometry, floorMaterial);
         floor.rotation.x = -Math.PI / 2;
@@ -254,16 +272,39 @@
         boxGroup.rotation.set(-0.08, -0.45, 0);
         scene.add(boxGroup);
 
+        const boardTexture = createCardboardTexture();
+        boardTexture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+
         const boardMaterial = new THREE.MeshStandardMaterial({
           color: 0xc98338,
-          roughness: 0.86,
+          map: boardTexture,
+          bumpMap: boardTexture,
+          bumpScale: 0.75,
+          roughness: 0.92,
           metalness: 0.01,
         });
+
+        const innerBoardMaterial = boardMaterial.clone();
+        innerBoardMaterial.roughness = 0.96;
 
         const edgeMaterial = new THREE.LineBasicMaterial({
           color: 0x6b3d19,
           transparent: true,
+          opacity: 0.34,
+        });
+
+        const creaseMaterial = new THREE.MeshStandardMaterial({
+          color: 0x8a4f1f,
+          roughness: 0.98,
+          metalness: 0,
+        });
+
+        const tapeMaterial = new THREE.MeshStandardMaterial({
+          color: 0xf2c15d,
+          transparent: true,
           opacity: 0.42,
+          roughness: 0.62,
+          metalness: 0,
         });
 
         function disposeObject(object) {
@@ -283,10 +324,41 @@
           }
         }
 
-        function addPanel(name, sizeX, sizeY, sizeZ, posX, posY, posZ) {
+        function createCardboardTexture() {
+          const canvas = document.createElement('canvas');
+          const size = 256;
+          const context2d = canvas.getContext('2d');
+
+          canvas.width = size;
+          canvas.height = size;
+          context2d.fillStyle = '#f2c05b';
+          context2d.fillRect(0, 0, size, size);
+
+          for (let y = 0; y < size; y += 5) {
+            context2d.fillStyle = y % 10 === 0 ? 'rgba(125, 72, 25, 0.13)' : 'rgba(255, 255, 255, 0.09)';
+            context2d.fillRect(0, y, size, 1);
+          }
+
+          for (let i = 0; i < 520; i++) {
+            const alpha = 0.04 + Math.random() * 0.08;
+            const shade = Math.random() > 0.5 ? 255 : 92;
+
+            context2d.fillStyle = `rgba(${shade}, ${shade}, ${shade}, ${alpha})`;
+            context2d.fillRect(Math.random() * size, Math.random() * size, 1 + Math.random() * 2, 1);
+          }
+
+          const texture = new THREE.CanvasTexture(canvas);
+          texture.wrapS = THREE.RepeatWrapping;
+          texture.wrapT = THREE.RepeatWrapping;
+          texture.repeat.set(2.2, 1.45);
+
+          return texture;
+        }
+
+        function addPanel(name, sizeX, sizeY, sizeZ, posX, posY, posZ, material = boardMaterial) {
           const panelGroup = new THREE.Group();
           const geometry = new THREE.BoxGeometry(sizeX, sizeY, sizeZ);
-          const panel = new THREE.Mesh(geometry, boardMaterial);
+          const panel = new THREE.Mesh(geometry, material);
 
           panel.name = name;
           panel.castShadow = true;
@@ -304,10 +376,10 @@
           return panelGroup;
         }
 
-        function addFlap(name, sizeX, sizeZ, hingeX, hingeY, hingeZ, openRotation, axis, layerOffset = 0) {
+        function addFlap(name, sizeX, sizeZ, hingeX, hingeY, hingeZ, openRotation, axis, layerOffset = 0, material = boardMaterial) {
           const flapGroup = new THREE.Group();
           const geometry = new THREE.BoxGeometry(sizeX, 5, sizeZ);
-          const flap = new THREE.Mesh(geometry, boardMaterial);
+          const flap = new THREE.Mesh(geometry, material);
           const edge = new THREE.LineSegments(new THREE.EdgesGeometry(geometry), edgeMaterial);
 
           flap.castShadow = true;
@@ -343,6 +415,41 @@
           return flapGroup;
         }
 
+        function addDetailStrip(name, sizeX, sizeY, sizeZ, posX, posY, posZ, material = creaseMaterial) {
+          const geometry = new THREE.BoxGeometry(sizeX, sizeY, sizeZ);
+          const strip = new THREE.Mesh(geometry, material);
+
+          strip.name = name;
+          strip.position.set(posX, posY, posZ);
+          strip.castShadow = true;
+          strip.receiveShadow = true;
+          boxGroup.add(strip);
+
+          return strip;
+        }
+
+        function addBoxDetails(w, d, h, t, baseY, topY, openProgress) {
+          const lip = Math.max(2.5, t * 0.58);
+          const cornerDepth = Math.max(3, t * 0.72);
+
+          addDetailStrip('front-top-lip', w + t, lip, t * 0.62, 0, topY + 2.8, d / 2 + 1.7);
+          addDetailStrip('back-top-lip', w + t, lip, t * 0.62, 0, topY + 2.8, -d / 2 - 1.7);
+          addDetailStrip('left-top-lip', t * 0.62, lip, d + t, -w / 2 - 1.7, topY + 2.8, 0);
+          addDetailStrip('right-top-lip', t * 0.62, lip, d + t, w / 2 + 1.7, topY + 2.8, 0);
+
+          addDetailStrip('front-right-corner', cornerDepth, h + 5, cornerDepth, w / 2 + 1.4, baseY + h / 2, d / 2 + 1.4);
+          addDetailStrip('front-left-corner', cornerDepth, h + 5, cornerDepth, -w / 2 - 1.4, baseY + h / 2, d / 2 + 1.4);
+          addDetailStrip('back-right-corner', cornerDepth, h + 5, cornerDepth, w / 2 + 1.4, baseY + h / 2, -d / 2 - 1.4);
+
+          if (openProgress <= 0.16) {
+            const tapeY = topY + 7.2;
+
+            addDetailStrip('top-center-tape', Math.max(8, w * 0.05), 1.4, d * 0.96, 0, tapeY, 0, tapeMaterial);
+            addDetailStrip('top-front-score', w * 0.96, 1.2, 2.1, 0, tapeY + 0.6, d * 0.24, creaseMaterial);
+            addDetailStrip('top-back-score', w * 0.96, 1.2, 2.1, 0, tapeY + 0.6, -d * 0.24, creaseMaterial);
+          }
+        }
+
         function buildBox() {
           clearGroup(boxGroup);
 
@@ -357,10 +464,10 @@
 
           // Main carton walls.
           addPanel('front', w, h, t, 0, midY, d / 2);
-          addPanel('back', w, h, t, 0, midY, -d / 2);
-          addPanel('left', t, h, d, -w / 2, midY, 0);
+          addPanel('back', w, h, t, 0, midY, -d / 2, innerBoardMaterial);
+          addPanel('left', t, h, d, -w / 2, midY, 0, innerBoardMaterial);
           addPanel('right', t, h, d, w / 2, midY, 0);
-          addPanel('bottom', w, t, d, 0, baseY, 0);
+          addPanel('bottom', w, t, d, 0, baseY, 0, innerBoardMaterial);
 
           const selectedBoxType = boxTypes[boxType] || boxTypes.rsc;
           const endFlapLength = d * selectedBoxType.endFlapRatio;
@@ -378,6 +485,7 @@
           addFlap('right-flap', sideFlapLength, d, w / 2, topY, 0, -sideFlapRotation, 'z-right');
           addFlap('front-flap', w, endFlapLength, 0, topY, d / 2, endFlapRotation, 'x-front', topLayerLift);
           addFlap('back-flap', w, endFlapLength, 0, topY, -d / 2, -endFlapRotation, 'x-back', topLayerLift);
+          addBoxDetails(w, d, h, t, baseY, topY, openProgress);
 
           // Center model.
           boxGroup.position.y = 12;
@@ -419,6 +527,9 @@
             strengthValue.textContent = getStrengthRating(selectedMaterial, selectedBoxType);
           }
           boardMaterial.color.setHex(selectedMaterial.color);
+          innerBoardMaterial.color.setHex(shiftHexColor(selectedMaterial.color, 28));
+          creaseMaterial.color.setHex(shiftHexColor(selectedMaterial.color, -52));
+          edgeMaterial.color.setHex(shiftHexColor(selectedMaterial.color, -74));
           updateCapacity(selectedMaterial, selectedBoxType);
           updateEstimate(selectedMaterial, selectedBoxType, selectedPrint);
           updateQuoteLink(selectedMaterial, selectedBoxType, selectedPrint);
@@ -426,6 +537,14 @@
 
         function getSelectedUnit() {
           return units[boxUnit] || units.mm;
+        }
+
+        function shiftHexColor(hexColor, amount) {
+          const red = clamp(((hexColor >> 16) & 255) + amount, 0, 255);
+          const green = clamp(((hexColor >> 8) & 255) + amount, 0, 255);
+          const blue = clamp((hexColor & 255) + amount, 0, 255);
+
+          return (red << 16) + (green << 8) + blue;
         }
 
         function formatNumber(value, precision = 0) {
