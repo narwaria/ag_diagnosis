@@ -13,11 +13,30 @@
 
 .ag-hero-banner__media {
   align-self: center;
-  border-radius: 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
   overflow: hidden;
+}
+
+.ag-hero-banner__media--radius-none {
+  border-radius: 0;
+}
+
+.ag-hero-banner__media--radius-small {
+  border-radius: 0.5rem;
+}
+
+.ag-hero-banner__media--radius-medium {
+  border-radius: 1rem;
+}
+
+.ag-hero-banner__media--radius-large {
+  border-radius: 1.5rem;
+}
+
+.ag-hero-banner__media--radius-full {
+  border-radius: 9999px;
 }
 
 .ag-hero-banner__media img {

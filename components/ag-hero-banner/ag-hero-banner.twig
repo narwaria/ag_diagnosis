@@ -175,6 +175,14 @@
   '33-67': 'ag-hero-banner__layout--33-67',
 } %}
 
+{% set media_radius_classes = {
+  'none': 'ag-hero-banner__media--radius-none',
+  'small': 'ag-hero-banner__media--radius-small',
+  'medium': 'ag-hero-banner__media--radius-medium',
+  'large': 'ag-hero-banner__media--radius-large',
+  'full': 'ag-hero-banner__media--radius-full'
+} %}
+
 {% set has_media = media is defined and media is iterable and media.src is defined and media.src is not empty %}
 {% set has_right_description = right_description is defined and right_description is not empty %}
 {% set has_right_content = has_right_description or has_media %}
@@ -199,6 +207,8 @@
 {% set selected_columns = requested_columns in column_classes|keys ? requested_columns : '100' %}
 {% set requested_eyebrow_style = eyebrow_style|default('badge') %}
 {% set selected_eyebrow_style = requested_eyebrow_style in eyebrow_style_classes|keys ? requested_eyebrow_style : 'badge' %}
+{% set requested_media_border_radius = media_border_radius|default('large') %}
+{% set selected_media_border_radius = requested_media_border_radius in media_radius_classes|keys ? requested_media_border_radius : 'large' %}
 
 <section class="relative overflow-hidden {{ margin_block_start_class }} {{ margin_block_end_class }} {{ background_classes[bg_variant] }} {{ width_breakout_classes[selected_layout_width]|default('') }}">
   {% if bg_variant in ['dark', 'gradient', 'charcoal', 'copper', 'cool'] %}
@@ -283,7 +293,7 @@
       </div>
 
       {% if has_right_content %}
-        <div class="ag-hero-banner__media">
+        <div class="ag-hero-banner__media {{ media_radius_classes[selected_media_border_radius] }}">
 
           {% if has_media %}
             {{
@@ -315,4 +325,12 @@
 
     </div>
   </div>
+
+  {% if show_section_slot is not defined or show_section_slot %}
+    {% block section_slot %}
+
+    {% endblock %}
+  {% endif %}
+
 </section>
+
