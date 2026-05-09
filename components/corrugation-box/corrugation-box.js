@@ -12,19 +12,56 @@
         const depthInput = component.querySelector('[data-box-depth]');
         const heightInput = component.querySelector('[data-box-height]');
         const openInput = component.querySelector('[data-box-open]');
+        const materialInput = component.querySelector('[data-box-material]');
+        const quantityInput = component.querySelector('[data-box-quantity]');
 
         const widthValue = component.querySelector('[data-box-width-value]');
         const depthValue = component.querySelector('[data-box-depth-value]');
         const heightValue = component.querySelector('[data-box-height-value]');
         const openValue = component.querySelector('[data-box-open-value]');
+        const materialValue = component.querySelector('[data-box-material-value]');
+        const quantityValue = component.querySelector('[data-box-quantity-value]');
+        const materialSummary = component.querySelector('[data-box-material-summary]');
+        const costValue = component.querySelector('[data-box-cost]');
+        const quoteLink = component.querySelector('[data-box-quote-link]');
 
         let boxWidth = Number(viewer.dataset.width || 220);
         let boxDepth = Number(viewer.dataset.depth || 160);
         let boxHeight = Number(viewer.dataset.height || 140);
         let boxOpen = Number(viewer.dataset.open || 75);
+        let boxMaterial = viewer.dataset.material || '5-ply-kraft';
+        let boxQuantity = Number(viewer.dataset.quantity || 500);
         let isDragging = false;
         let previousPointerX = 0;
         let previousPointerY = 0;
+
+        const quoteBaseUrl = viewer.dataset.quoteUrl || '/request-quote';
+        const materials = {
+          '3-ply-kraft': {
+            label: '3-ply Kraft Board',
+            shortLabel: '3-ply',
+            rate: 0.78,
+            color: 0xd28a3a,
+          },
+          '5-ply-kraft': {
+            label: '5-ply Kraft Board',
+            shortLabel: '5-ply',
+            rate: 1,
+            color: 0xc98338,
+          },
+          '7-ply-heavy': {
+            label: '7-ply Heavy Duty Board',
+            shortLabel: '7-ply',
+            rate: 1.38,
+            color: 0xa96528,
+          },
+          'white-board': {
+            label: 'White Corrugated Board',
+            shortLabel: 'White',
+            rate: 1.18,
+            color: 0xe9dcc8,
+          },
+        };
 
         const scene = new THREE.Scene();
 
@@ -206,6 +243,8 @@
         }
 
         function updateLabels() {
+          const selectedMaterial = materials[boxMaterial] || materials['5-ply-kraft'];
+
           if (widthValue) {
             widthValue.textContent = `${boxWidth} mm`;
           }
@@ -218,6 +257,50 @@
           if (openValue) {
             openValue.textContent = `${boxOpen}%`;
           }
+          if (materialValue) {
+            materialValue.textContent = selectedMaterial.shortLabel;
+          }
+          if (quantityValue) {
+            quantityValue.textContent = boxQuantity.toLocaleString();
+          }
+          if (materialSummary) {
+            materialSummary.textContent = selectedMaterial.label;
+          }
+          boardMaterial.color.setHex(selectedMaterial.color);
+          updateEstimate(selectedMaterial);
+          updateQuoteLink(selectedMaterial);
+        }
+
+        function updateEstimate(selectedMaterial) {
+          if (!costValue) {
+            return;
+          }
+
+          const surfaceArea = 2 * ((boxWidth * boxDepth) + (boxWidth * boxHeight) + (boxDepth * boxHeight));
+          const squareMeters = surfaceArea / 1000000;
+          const baseUnitCost = squareMeters * 18 * selectedMaterial.rate;
+          const setupCost = 450;
+          const quantityDiscount = boxQuantity >= 2000 ? 0.86 : boxQuantity >= 1000 ? 0.92 : 1;
+          const estimatedTotal = (baseUnitCost * boxQuantity * quantityDiscount) + setupCost;
+          const low = Math.max(0, Math.round(estimatedTotal * 0.9));
+          const high = Math.round(estimatedTotal * 1.12);
+
+          costValue.textContent = `₹${low.toLocaleString()} - ₹${high.toLocaleString()}`;
+        }
+
+        function updateQuoteLink(selectedMaterial) {
+          if (!quoteLink) {
+            return;
+          }
+
+          const url = new URL(quoteBaseUrl, window.location.origin);
+          url.searchParams.set('width', boxWidth);
+          url.searchParams.set('depth', boxDepth);
+          url.searchParams.set('height', boxHeight);
+          url.searchParams.set('material', selectedMaterial.label);
+          url.searchParams.set('quantity', boxQuantity);
+
+          quoteLink.href = url.origin === window.location.origin ? `${url.pathname}${url.search}` : url.href;
         }
 
         function onInputChange() {
@@ -225,16 +308,20 @@
           boxDepth = Number(depthInput.value);
           boxHeight = Number(heightInput.value);
           boxOpen = Number(openInput.value);
+          boxMaterial = materialInput.value;
+          boxQuantity = Math.max(100, Number(quantityInput.value || 100));
 
           updateLabels();
           buildBox();
         }
 
-        if (widthInput && depthInput && heightInput && openInput) {
+        if (widthInput && depthInput && heightInput && openInput && materialInput && quantityInput) {
           widthInput.addEventListener('input', onInputChange);
           depthInput.addEventListener('input', onInputChange);
           heightInput.addEventListener('input', onInputChange);
           openInput.addEventListener('input', onInputChange);
+          materialInput.addEventListener('change', onInputChange);
+          quantityInput.addEventListener('input', onInputChange);
         }
 
         function handleResize() {

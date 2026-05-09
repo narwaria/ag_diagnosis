@@ -6,6 +6,9 @@
 {% set depth = depth|default(160) %}
 {% set height = height|default(140) %}
 {% set open = open|default(75) %}
+{% set material = material|default('5-ply-kraft') %}
+{% set quantity = quantity|default(500) %}
+{% set request_quote_url = request_quote_url|default('/request-quote') %}
 {% set canvas_height = canvas_height|default('520px') %}
 
 <section class="ag-corrugation-box" data-component="corrugation-box">
@@ -70,18 +73,45 @@
         >
         <strong data-box-open-value>{{ open }}%</strong>
       </label>
+
+      <label>
+        <span>Material</span>
+        <select data-box-material>
+          <option value="3-ply-kraft"{{ material == '3-ply-kraft' ? ' selected' }}>3-ply Kraft</option>
+          <option value="5-ply-kraft"{{ material == '5-ply-kraft' ? ' selected' }}>5-ply Kraft</option>
+          <option value="7-ply-heavy"{{ material == '7-ply-heavy' ? ' selected' }}>7-ply Heavy Duty</option>
+          <option value="white-board"{{ material == 'white-board' ? ' selected' }}>White Board</option>
+        </select>
+        <strong data-box-material-value>5-ply</strong>
+      </label>
+
+      <label>
+        <span>Qty</span>
+        <input
+          type="number"
+          min="100"
+          step="50"
+          value="{{ quantity }}"
+          data-box-quantity
+        >
+        <strong data-box-quantity-value>{{ quantity }}</strong>
+      </label>
     </div>
 
     <div class="ag-corrugation-box__info">
       <div>
         <strong>Material</strong>
-        <span>Brown Kraft Corrugated Board</span>
+        <span data-box-material-summary>5-ply Kraft Board</span>
       </div>
       <div>
-        <strong>Use Case</strong>
-        <span>Shipping, Storage & Product Packaging</span>
+        <strong>Estimated Cost</strong>
+        <span data-box-cost>Calculating...</span>
       </div>
     </div>
+
+    <a class="ag-corrugation-box__quote" href="{{ request_quote_url }}" data-box-quote-link>
+      Box calculator
+    </a>
   </div>
 
   <div class="ag-corrugation-box__viewer">
@@ -93,6 +123,9 @@
       data-depth="{{ depth }}"
       data-height="{{ height }}"
       data-open="{{ open }}"
+      data-material="{{ material }}"
+      data-quantity="{{ quantity }}"
+      data-quote-url="{{ request_quote_url }}"
     ></div>
   </div>
 </section>

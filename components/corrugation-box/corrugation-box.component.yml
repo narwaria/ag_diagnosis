@@ -39,6 +39,34 @@ props:
       description: Controls how open the box flaps are by default.
       default: 75
 
+    material:
+      type: string
+      title: "Material"
+      description: Default corrugated board material.
+      enum:
+        - 3-ply-kraft
+        - 5-ply-kraft
+        - 7-ply-heavy
+        - white-board
+      meta:enum:
+        3-ply-kraft: "3-ply Kraft"
+        5-ply-kraft: "5-ply Kraft"
+        7-ply-heavy: "7-ply Heavy Duty"
+        white-board: "White Board"
+      default: 5-ply-kraft
+
+    quantity:
+      type: number
+      title: "Quantity"
+      description: Default quantity used for the estimate.
+      default: 500
+
+    request_quote_url:
+      type: string
+      title: "Request Quote URL"
+      description: Link used for the request quote button.
+      default: "/request-quote"
+
     canvas_height:
       type: string
       title: "Canvas Height"
