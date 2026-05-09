@@ -1,0 +1,187 @@
+.ag-corrugation-box {
+  display: grid;
+  grid-template-columns: minmax(340px, 0.72fr) minmax(0, 1.28fr);
+  gap: clamp(24px, 3vw, 48px);
+  align-items: center;
+  padding: clamp(32px, 4vw, 56px);
+  border-radius: 32px;
+  background:
+    radial-gradient(circle at top left, rgba(249, 115, 22, 0.16), transparent 36%),
+    linear-gradient(135deg, #fff7ed 0%, #ffffff 45%, #f8fafc 100%);
+  border: 1px solid rgba(249, 115, 22, 0.16);
+  box-shadow: 0 24px 80px rgba(15, 23, 42, 0.1);
+  overflow: hidden;
+}
+
+.ag-corrugation-box__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  margin-bottom: 16px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(249, 115, 22, 0.1);
+  color: #c2410c;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.ag-corrugation-box__title {
+  margin: 0;
+  color: #111827;
+  font-size: clamp(34px, 3.7vw, 56px);
+  line-height: 1;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+}
+
+.ag-corrugation-box__subtitle {
+  max-width: 520px;
+  margin: 16px 0 0;
+  color: #4b5563;
+  font-size: 17px;
+  line-height: 1.55;
+}
+
+.ag-corrugation-box__controls {
+  display: grid;
+  gap: 12px;
+  max-width: 620px;
+  margin-top: 26px;
+  padding: 18px 20px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.08);
+  backdrop-filter: blur(10px);
+}
+
+.ag-corrugation-box__controls label {
+  display: grid;
+  grid-template-columns: 64px minmax(120px, 1fr) 64px;
+  gap: 12px;
+  align-items: center;
+  color: #374151;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.ag-corrugation-box__controls input[type="range"] {
+  width: 100%;
+  accent-color: #f97316;
+}
+
+.ag-corrugation-box__controls strong {
+  color: #111827;
+  font-size: 12px;
+  text-align: right;
+}
+
+.ag-corrugation-box__info {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  max-width: 620px;
+  margin-top: 14px;
+}
+
+.ag-corrugation-box__info div {
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid rgba(229, 231, 235, 0.95);
+}
+
+.ag-corrugation-box__info strong,
+.ag-corrugation-box__info span {
+  display: block;
+}
+
+.ag-corrugation-box__info strong {
+  color: #111827;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.ag-corrugation-box__info span {
+  color: #6b7280;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.ag-corrugation-box__viewer {
+  min-width: 0;
+}
+
+.ag-corrugation-box__canvas {
+  position: relative;
+  width: 100%;
+  min-height: clamp(480px, 44vw, 680px);
+  border-radius: 32px;
+  background:
+    radial-gradient(circle at 50% 25%, rgba(251, 146, 60, 0.24), transparent 34%),
+    linear-gradient(160deg, #0f172a 0%, #1f2937 52%, #111827 100%);
+  overflow: hidden;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 24px 70px rgba(15, 23, 42, 0.25);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.ag-corrugation-box__canvas.is-dragging {
+  cursor: grabbing;
+}
+
+.ag-corrugation-box__canvas canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.ag-corrugation-box__canvas::after {
+  content: "Drag to rotate • Live 3D preview";
+  position: absolute;
+  left: 20px;
+  bottom: 18px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 12px;
+  font-weight: 700;
+  backdrop-filter: blur(10px);
+}
+
+@media (max-width: 991px) {
+  .ag-corrugation-box {
+    grid-template-columns: 1fr;
+    padding: 28px;
+  }
+
+  .ag-corrugation-box__controls label {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .ag-corrugation-box__controls strong {
+    text-align: left;
+  }
+}
+
+@media (max-width: 640px) {
+  .ag-corrugation-box {
+    padding: 20px;
+    border-radius: 24px;
+  }
+
+  .ag-corrugation-box__info {
+    grid-template-columns: 1fr;
+  }
+
+  .ag-corrugation-box__canvas {
+    min-height: 360px;
+    border-radius: 24px;
+  }
+}

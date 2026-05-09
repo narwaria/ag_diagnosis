@@ -34,3 +34,12 @@ global:
   dependencies:
     - core/drupal
     - core/once
+
+threejs:
+  js:
+    https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js:
+      type: external
+      minified: true
+  dependencies:
+    - core/drupal
+    - core/once

@@ -1,0 +1,51 @@
+name: Corrugation Box
+description: Interactive 3D corrugated box component using Three.js.
+status: stable
+group: Ambey Global
+
+props:
+  type: object
+  properties:
+    title:
+      type: string
+      title: "Title"
+      examples:
+        - Corrugated Box Preview
+
+    subtitle:
+      type: string
+      title: "Subtitle"
+      examples:
+        - Customize box width, depth and height in real time.
+
+    width:
+      type: number
+      title: "Box Width"
+      default: 220
+
+    depth:
+      type: number
+      title: "Box Depth"
+      default: 160
+
+    height:
+      type: number
+      title: "Box Height"
+      default: 140
+
+    open:
+      type: number
+      title: "Box Open Amount"
+      description: Controls how open the box flaps are by default.
+      default: 75
+
+    canvas_height:
+      type: string
+      title: "Canvas Height"
+      default: "520px"
+
+libraryOverrides:
+  dependencies:
+    - core/drupal
+    - core/once
+    - ag_diagnosis/threejs

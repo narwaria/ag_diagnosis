@@ -1,0 +1,98 @@
+{{ attach_library('ag_diagnosis/threejs') }}
+
+{% set title = title|default('Corrugated Box Preview') %}
+{% set subtitle = subtitle|default('Customize box dimensions and preview the 3D corrugated box.') %}
+{% set width = width|default(220) %}
+{% set depth = depth|default(160) %}
+{% set height = height|default(140) %}
+{% set open = open|default(75) %}
+{% set canvas_height = canvas_height|default('520px') %}
+
+<section class="ag-corrugation-box" data-component="corrugation-box">
+  <div class="ag-corrugation-box__content">
+    <div class="ag-corrugation-box__eyebrow">
+      Ambey Global Packaging
+    </div>
+
+    <h2 class="ag-corrugation-box__title">
+      {{ title }}
+    </h2>
+
+    <p class="ag-corrugation-box__subtitle">
+      {{ subtitle }}
+    </p>
+
+    <div class="ag-corrugation-box__controls">
+      <label>
+        <span>Width</span>
+        <input
+          type="range"
+          min="120"
+          max="420"
+          value="{{ width }}"
+          data-box-width
+        >
+        <strong data-box-width-value>{{ width }} mm</strong>
+      </label>
+
+      <label>
+        <span>Depth</span>
+        <input
+          type="range"
+          min="100"
+          max="320"
+          value="{{ depth }}"
+          data-box-depth
+        >
+        <strong data-box-depth-value>{{ depth }} mm</strong>
+      </label>
+
+      <label>
+        <span>Height</span>
+        <input
+          type="range"
+          min="80"
+          max="300"
+          value="{{ height }}"
+          data-box-height
+        >
+        <strong data-box-height-value>{{ height }} mm</strong>
+      </label>
+
+      <label>
+        <span>Open</span>
+        <input
+          type="range"
+          min="0"
+          max="100"
+          value="{{ open }}"
+          data-box-open
+        >
+        <strong data-box-open-value>{{ open }}%</strong>
+      </label>
+    </div>
+
+    <div class="ag-corrugation-box__info">
+      <div>
+        <strong>Material</strong>
+        <span>Brown Kraft Corrugated Board</span>
+      </div>
+      <div>
+        <strong>Use Case</strong>
+        <span>Shipping, Storage & Product Packaging</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="ag-corrugation-box__viewer">
+    <div
+      class="ag-corrugation-box__canvas"
+      style="height: {{ canvas_height }};"
+      data-corrugation-viewer
+      data-width="{{ width }}"
+      data-depth="{{ depth }}"
+      data-height="{{ height }}"
+      data-open="{{ open }}"
+    ></div>
+  </div>
+</section>
