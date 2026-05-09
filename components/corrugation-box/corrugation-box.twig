@@ -6,7 +6,10 @@
 {% set depth = depth|default(160) %}
 {% set height = height|default(140) %}
 {% set open = open|default(75) %}
+{% set unit = unit|default('mm') %}
 {% set material = material|default('5-ply-kraft') %}
+{% set box_type = box_type|default('rsc') %}
+{% set print_option = print_option|default('plain') %}
 {% set quantity = quantity|default(500) %}
 {% set request_quote_url = request_quote_url|default('/request-quote') %}
 {% set canvas_height = canvas_height|default('520px') %}
@@ -26,6 +29,13 @@
     </p>
 
     <div class="ag-corrugation-box__controls">
+      <div class="ag-corrugation-box__presets" aria-label="Preset box sizes">
+        <button type="button" data-box-preset="small">Small</button>
+        <button type="button" data-box-preset="apparel">Apparel</button>
+        <button type="button" data-box-preset="fmcg">FMCG</button>
+        <button type="button" data-box-preset="heavy">Heavy</button>
+      </div>
+
       <label>
         <span>Width</span>
         <input
@@ -75,6 +85,16 @@
       </label>
 
       <label>
+        <span>Unit</span>
+        <select data-box-unit>
+          <option value="mm"{{ unit == 'mm' ? ' selected' }}>Millimeters</option>
+          <option value="cm"{{ unit == 'cm' ? ' selected' }}>Centimeters</option>
+          <option value="in"{{ unit == 'in' ? ' selected' }}>Inches</option>
+        </select>
+        <strong data-box-unit-value>{{ unit }}</strong>
+      </label>
+
+      <label>
         <span>Material</span>
         <select data-box-material>
           <option value="3-ply-kraft"{{ material == '3-ply-kraft' ? ' selected' }}>3-ply Kraft</option>
@@ -83,6 +103,28 @@
           <option value="white-board"{{ material == 'white-board' ? ' selected' }}>White Board</option>
         </select>
         <strong data-box-material-value>5-ply</strong>
+      </label>
+
+      <label>
+        <span>Type</span>
+        <select data-box-type>
+          <option value="rsc"{{ box_type == 'rsc' ? ' selected' }}>Regular Slotted Carton</option>
+          <option value="mailer"{{ box_type == 'mailer' ? ' selected' }}>Mailer Box</option>
+          <option value="die-cut"{{ box_type == 'die-cut' ? ' selected' }}>Die-cut Box</option>
+          <option value="half-slotted"{{ box_type == 'half-slotted' ? ' selected' }}>Half-slotted Carton</option>
+        </select>
+        <strong data-box-type-value>RSC</strong>
+      </label>
+
+      <label>
+        <span>Print</span>
+        <select data-box-print>
+          <option value="plain"{{ print_option == 'plain' ? ' selected' }}>Plain</option>
+          <option value="one-color"{{ print_option == 'one-color' ? ' selected' }}>1-color Print</option>
+          <option value="two-color"{{ print_option == 'two-color' ? ' selected' }}>2-color Print</option>
+          <option value="full-color"{{ print_option == 'full-color' ? ' selected' }}>Full Color Print</option>
+        </select>
+        <strong data-box-print-value>Plain</strong>
       </label>
 
       <label>
@@ -100,8 +142,16 @@
 
     <div class="ag-corrugation-box__info">
       <div>
-        <strong>Material</strong>
-        <span data-box-material-summary>5-ply Kraft Board</span>
+        <strong>Strength</strong>
+        <span data-box-strength>Calculating...</span>
+      </div>
+      <div>
+        <strong>Volume</strong>
+        <span data-box-volume>Calculating...</span>
+      </div>
+      <div>
+        <strong>Payload</strong>
+        <span data-box-payload>Calculating...</span>
       </div>
       <div>
         <strong>Estimated Cost</strong>
@@ -123,7 +173,10 @@
       data-depth="{{ depth }}"
       data-height="{{ height }}"
       data-open="{{ open }}"
+      data-unit="{{ unit }}"
       data-material="{{ material }}"
+      data-box-type="{{ box_type }}"
+      data-print="{{ print_option }}"
       data-quantity="{{ quantity }}"
       data-quote-url="{{ request_quote_url }}"
     ></div>

@@ -39,6 +39,20 @@ props:
       description: Controls how open the box flaps are by default.
       default: 75
 
+    unit:
+      type: string
+      title: "Dimension Unit"
+      description: Default unit used for dimension labels and quote details.
+      enum:
+        - mm
+        - cm
+        - in
+      meta:enum:
+        mm: "Millimeters"
+        cm: "Centimeters"
+        in: "Inches"
+      default: mm
+
     material:
       type: string
       title: "Material"
@@ -54,6 +68,38 @@ props:
         7-ply-heavy: "7-ply Heavy Duty"
         white-board: "White Board"
       default: 5-ply-kraft
+
+    box_type:
+      type: string
+      title: "Box Type"
+      description: Default box construction type.
+      enum:
+        - rsc
+        - mailer
+        - die-cut
+        - half-slotted
+      meta:enum:
+        rsc: "Regular Slotted Carton"
+        mailer: "Mailer Box"
+        die-cut: "Die-cut Box"
+        half-slotted: "Half-slotted Carton"
+      default: rsc
+
+    print_option:
+      type: string
+      title: "Print Option"
+      description: Default print finish used for the estimate.
+      enum:
+        - plain
+        - one-color
+        - two-color
+        - full-color
+      meta:enum:
+        plain: "Plain"
+        one-color: "1-color Print"
+        two-color: "2-color Print"
+        full-color: "Full Color Print"
+      default: plain
 
     quantity:
       type: number

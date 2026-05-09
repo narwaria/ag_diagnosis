@@ -12,16 +12,25 @@
         const depthInput = component.querySelector('[data-box-depth]');
         const heightInput = component.querySelector('[data-box-height]');
         const openInput = component.querySelector('[data-box-open]');
+        const unitInput = component.querySelector('[data-box-unit]');
         const materialInput = component.querySelector('[data-box-material]');
+        const typeInput = component.querySelector('[data-box-type]');
+        const printInput = component.querySelector('[data-box-print]');
         const quantityInput = component.querySelector('[data-box-quantity]');
+        const presetButtons = component.querySelectorAll('[data-box-preset]');
 
         const widthValue = component.querySelector('[data-box-width-value]');
         const depthValue = component.querySelector('[data-box-depth-value]');
         const heightValue = component.querySelector('[data-box-height-value]');
         const openValue = component.querySelector('[data-box-open-value]');
+        const unitValue = component.querySelector('[data-box-unit-value]');
         const materialValue = component.querySelector('[data-box-material-value]');
+        const typeValue = component.querySelector('[data-box-type-value]');
+        const printValue = component.querySelector('[data-box-print-value]');
         const quantityValue = component.querySelector('[data-box-quantity-value]');
-        const materialSummary = component.querySelector('[data-box-material-summary]');
+        const strengthValue = component.querySelector('[data-box-strength]');
+        const volumeValue = component.querySelector('[data-box-volume]');
+        const payloadValue = component.querySelector('[data-box-payload]');
         const costValue = component.querySelector('[data-box-cost]');
         const quoteLink = component.querySelector('[data-box-quote-link]');
 
@@ -29,7 +38,10 @@
         let boxDepth = Number(viewer.dataset.depth || 160);
         let boxHeight = Number(viewer.dataset.height || 140);
         let boxOpen = Number(viewer.dataset.open || 75);
+        let boxUnit = viewer.dataset.unit || 'mm';
         let boxMaterial = viewer.dataset.material || '5-ply-kraft';
+        let boxType = viewer.dataset.boxType || 'rsc';
+        let printOption = viewer.dataset.print || 'plain';
         let boxQuantity = Number(viewer.dataset.quantity || 500);
         let isDragging = false;
         let previousPointerX = 0;
@@ -42,24 +54,153 @@
             shortLabel: '3-ply',
             rate: 0.78,
             color: 0xd28a3a,
+            strength: 1,
           },
           '5-ply-kraft': {
             label: '5-ply Kraft Board',
             shortLabel: '5-ply',
             rate: 1,
             color: 0xc98338,
+            strength: 2,
           },
           '7-ply-heavy': {
             label: '7-ply Heavy Duty Board',
             shortLabel: '7-ply',
             rate: 1.38,
             color: 0xa96528,
+            strength: 3,
           },
           'white-board': {
             label: 'White Corrugated Board',
             shortLabel: 'White',
             rate: 1.18,
             color: 0xe9dcc8,
+            strength: 1.6,
+          },
+        };
+
+        const boxTypes = {
+          rsc: {
+            label: 'Regular Slotted Carton',
+            shortLabel: 'RSC',
+            rate: 1,
+            strength: 1,
+            endFlapRatio: 0.52,
+            sideFlapRatio: 0.5,
+          },
+          mailer: {
+            label: 'Mailer Box',
+            shortLabel: 'Mailer',
+            rate: 1.16,
+            strength: 0.85,
+            endFlapRatio: 0.68,
+            sideFlapRatio: 0.58,
+          },
+          'die-cut': {
+            label: 'Die-cut Box',
+            shortLabel: 'Die-cut',
+            rate: 1.28,
+            strength: 0.95,
+            endFlapRatio: 0.6,
+            sideFlapRatio: 0.54,
+          },
+          'half-slotted': {
+            label: 'Half-slotted Carton',
+            shortLabel: 'HSC',
+            rate: 0.92,
+            strength: 0.9,
+            endFlapRatio: 0.44,
+            sideFlapRatio: 0.44,
+          },
+        };
+
+        const printOptions = {
+          plain: {
+            label: 'Plain',
+            shortLabel: 'Plain',
+            rate: 1,
+            setup: 0,
+          },
+          'one-color': {
+            label: '1-color Print',
+            shortLabel: '1C',
+            rate: 1.12,
+            setup: 650,
+          },
+          'two-color': {
+            label: '2-color Print',
+            shortLabel: '2C',
+            rate: 1.2,
+            setup: 1100,
+          },
+          'full-color': {
+            label: 'Full Color Print',
+            shortLabel: 'Full',
+            rate: 1.36,
+            setup: 1800,
+          },
+        };
+
+        const units = {
+          mm: {
+            label: 'mm',
+            precision: 0,
+            fromMm(value) {
+              return value;
+            },
+          },
+          cm: {
+            label: 'cm',
+            precision: 1,
+            fromMm(value) {
+              return value / 10;
+            },
+          },
+          in: {
+            label: 'in',
+            precision: 1,
+            fromMm(value) {
+              return value / 25.4;
+            },
+          },
+        };
+
+        const presets = {
+          small: {
+            width: 180,
+            depth: 120,
+            height: 90,
+            material: '3-ply-kraft',
+            boxType: 'mailer',
+            print: 'one-color',
+            quantity: 500,
+          },
+          apparel: {
+            width: 300,
+            depth: 220,
+            height: 110,
+            material: '5-ply-kraft',
+            boxType: 'mailer',
+            print: 'two-color',
+            quantity: 1000,
+          },
+          fmcg: {
+            width: 360,
+            depth: 260,
+            height: 220,
+            material: '5-ply-kraft',
+            boxType: 'rsc',
+            print: 'one-color',
+            quantity: 1500,
+          },
+          heavy: {
+            width: 420,
+            depth: 320,
+            height: 300,
+            material: '7-ply-heavy',
+            boxType: 'rsc',
+            print: 'plain',
+            quantity: 500,
           },
         };
 
@@ -221,9 +362,9 @@
           addPanel('right', t, h, d, w / 2, midY, 0);
           addPanel('bottom', w, t, d, 0, baseY, 0);
 
-          // Partially opened top flaps.
-          const endFlapLength = d * 0.52;
-          const sideFlapLength = w * 0.5;
+          const selectedBoxType = boxTypes[boxType] || boxTypes.rsc;
+          const endFlapLength = d * selectedBoxType.endFlapRatio;
+          const sideFlapLength = w * selectedBoxType.sideFlapRatio;
           const openProgress = clamp(boxOpen / 100, 0, 1);
 
           // Closing order: side flaps close first, then front/back flaps close over them.
@@ -244,42 +385,104 @@
 
         function updateLabels() {
           const selectedMaterial = materials[boxMaterial] || materials['5-ply-kraft'];
+          const selectedBoxType = boxTypes[boxType] || boxTypes.rsc;
+          const selectedPrint = printOptions[printOption] || printOptions.plain;
 
           if (widthValue) {
-            widthValue.textContent = `${boxWidth} mm`;
+            widthValue.textContent = formatDimension(boxWidth);
           }
           if (depthValue) {
-            depthValue.textContent = `${boxDepth} mm`;
+            depthValue.textContent = formatDimension(boxDepth);
           }
           if (heightValue) {
-            heightValue.textContent = `${boxHeight} mm`;
+            heightValue.textContent = formatDimension(boxHeight);
           }
           if (openValue) {
             openValue.textContent = `${boxOpen}%`;
           }
+          if (unitValue) {
+            unitValue.textContent = getSelectedUnit().label;
+          }
           if (materialValue) {
             materialValue.textContent = selectedMaterial.shortLabel;
+          }
+          if (typeValue) {
+            typeValue.textContent = selectedBoxType.shortLabel;
+          }
+          if (printValue) {
+            printValue.textContent = selectedPrint.shortLabel;
           }
           if (quantityValue) {
             quantityValue.textContent = boxQuantity.toLocaleString();
           }
-          if (materialSummary) {
-            materialSummary.textContent = selectedMaterial.label;
+          if (strengthValue) {
+            strengthValue.textContent = getStrengthRating(selectedMaterial, selectedBoxType);
           }
           boardMaterial.color.setHex(selectedMaterial.color);
-          updateEstimate(selectedMaterial);
-          updateQuoteLink(selectedMaterial);
+          updateCapacity(selectedMaterial, selectedBoxType);
+          updateEstimate(selectedMaterial, selectedBoxType, selectedPrint);
+          updateQuoteLink(selectedMaterial, selectedBoxType, selectedPrint);
         }
 
-        function updateEstimate(selectedMaterial) {
+        function getSelectedUnit() {
+          return units[boxUnit] || units.mm;
+        }
+
+        function formatNumber(value, precision = 0) {
+          const fixedValue = Number(value.toFixed(precision));
+
+          return fixedValue.toLocaleString(undefined, {
+            maximumFractionDigits: precision,
+            minimumFractionDigits: precision,
+          });
+        }
+
+        function formatDimension(valueInMm) {
+          const unit = getSelectedUnit();
+
+          return `${formatNumber(unit.fromMm(valueInMm), unit.precision)} ${unit.label}`;
+        }
+
+        function getStrengthRating(selectedMaterial, selectedBoxType) {
+          const volume = boxWidth * boxDepth * boxHeight;
+          const volumePenalty = volume > 25000000 ? 0.8 : volume > 12000000 ? 0.45 : 0;
+          const score = selectedMaterial.strength + selectedBoxType.strength - volumePenalty;
+
+          if (score >= 3.4) {
+            return 'Heavy duty';
+          }
+          if (score >= 2.25) {
+            return 'Medium duty';
+          }
+
+          return 'Light duty';
+        }
+
+        function updateCapacity(selectedMaterial, selectedBoxType) {
+          const volumeLiters = (boxWidth * boxDepth * boxHeight) / 1000000;
+          const volumePrecision = volumeLiters < 10 ? 1 : 0;
+          const payloadScore = selectedMaterial.strength * selectedBoxType.strength;
+          const payloadHigh = Math.max(2, Math.round(payloadScore * Math.sqrt(volumeLiters) * 1.6));
+          const payloadLow = Math.max(1, Math.round(payloadHigh * 0.55));
+
+          if (volumeValue) {
+            volumeValue.textContent = `${formatNumber(volumeLiters, volumePrecision)} L`;
+          }
+
+          if (payloadValue) {
+            payloadValue.textContent = `${payloadLow}-${payloadHigh} kg estimate`;
+          }
+        }
+
+        function updateEstimate(selectedMaterial, selectedBoxType, selectedPrint) {
           if (!costValue) {
             return;
           }
 
           const surfaceArea = 2 * ((boxWidth * boxDepth) + (boxWidth * boxHeight) + (boxDepth * boxHeight));
           const squareMeters = surfaceArea / 1000000;
-          const baseUnitCost = squareMeters * 18 * selectedMaterial.rate;
-          const setupCost = 450;
+          const baseUnitCost = squareMeters * 18 * selectedMaterial.rate * selectedBoxType.rate * selectedPrint.rate;
+          const setupCost = 450 + selectedPrint.setup;
           const quantityDiscount = boxQuantity >= 2000 ? 0.86 : boxQuantity >= 1000 ? 0.92 : 1;
           const estimatedTotal = (baseUnitCost * boxQuantity * quantityDiscount) + setupCost;
           const low = Math.max(0, Math.round(estimatedTotal * 0.9));
@@ -288,16 +491,21 @@
           costValue.textContent = `₹${low.toLocaleString()} - ₹${high.toLocaleString()}`;
         }
 
-        function updateQuoteLink(selectedMaterial) {
+        function updateQuoteLink(selectedMaterial, selectedBoxType, selectedPrint) {
           if (!quoteLink) {
             return;
           }
 
           const url = new URL(quoteBaseUrl, window.location.origin);
-          url.searchParams.set('width', boxWidth);
-          url.searchParams.set('depth', boxDepth);
-          url.searchParams.set('height', boxHeight);
+          const unit = getSelectedUnit();
+
+          url.searchParams.set('width', formatNumber(unit.fromMm(boxWidth), unit.precision));
+          url.searchParams.set('depth', formatNumber(unit.fromMm(boxDepth), unit.precision));
+          url.searchParams.set('height', formatNumber(unit.fromMm(boxHeight), unit.precision));
+          url.searchParams.set('unit', unit.label);
           url.searchParams.set('material', selectedMaterial.label);
+          url.searchParams.set('box_type', selectedBoxType.label);
+          url.searchParams.set('print', selectedPrint.label);
           url.searchParams.set('quantity', boxQuantity);
 
           quoteLink.href = url.origin === window.location.origin ? `${url.pathname}${url.search}` : url.href;
@@ -308,20 +516,48 @@
           boxDepth = Number(depthInput.value);
           boxHeight = Number(heightInput.value);
           boxOpen = Number(openInput.value);
+          boxUnit = unitInput.value;
           boxMaterial = materialInput.value;
+          boxType = typeInput.value;
+          printOption = printInput.value;
           boxQuantity = Math.max(100, Number(quantityInput.value || 100));
 
           updateLabels();
           buildBox();
         }
 
-        if (widthInput && depthInput && heightInput && openInput && materialInput && quantityInput) {
+        function applyPreset(presetName) {
+          const preset = presets[presetName];
+
+          if (!preset) {
+            return;
+          }
+
+          widthInput.value = preset.width;
+          depthInput.value = preset.depth;
+          heightInput.value = preset.height;
+          materialInput.value = preset.material;
+          typeInput.value = preset.boxType;
+          printInput.value = preset.print;
+          quantityInput.value = preset.quantity;
+
+          onInputChange();
+        }
+
+        if (widthInput && depthInput && heightInput && openInput && unitInput && materialInput && typeInput && printInput && quantityInput) {
           widthInput.addEventListener('input', onInputChange);
           depthInput.addEventListener('input', onInputChange);
           heightInput.addEventListener('input', onInputChange);
           openInput.addEventListener('input', onInputChange);
+          unitInput.addEventListener('change', onInputChange);
           materialInput.addEventListener('change', onInputChange);
+          typeInput.addEventListener('change', onInputChange);
+          printInput.addEventListener('change', onInputChange);
           quantityInput.addEventListener('input', onInputChange);
+
+          presetButtons.forEach((button) => {
+            button.addEventListener('click', () => applyPreset(button.dataset.boxPreset));
+          });
         }
 
         function handleResize() {
