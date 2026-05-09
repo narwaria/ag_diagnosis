@@ -496,7 +496,8 @@
             return;
           }
 
-          const url = new URL(quoteBaseUrl, window.location.origin);
+          const fallbackOrigin = 'https://ag-diagnosis.local';
+          const url = createUrl(quoteBaseUrl || '/request-quote', fallbackOrigin);
           const unit = getSelectedUnit();
 
           url.searchParams.set('width', formatNumber(unit.fromMm(boxWidth), unit.precision));
@@ -508,7 +509,32 @@
           url.searchParams.set('print', selectedPrint.label);
           url.searchParams.set('quantity', boxQuantity);
 
-          quoteLink.href = url.origin === window.location.origin ? `${url.pathname}${url.search}` : url.href;
+          quoteLink.href = (url.origin === window.location.origin || url.origin === fallbackOrigin) ? `${url.pathname}${url.search}` : url.href;
+        }
+
+        function createUrl(value, fallbackOrigin) {
+          const absoluteUrlPattern = /^[a-z][a-z\d+\-.]*:\/\//i;
+
+          if (absoluteUrlPattern.test(value)) {
+            return new URL(value);
+          }
+
+          const baseCandidates = [
+            document.baseURI,
+            window.location.href,
+            window.location.origin,
+          ].filter((candidate) => typeof candidate === 'string' && /^https?:\/\//i.test(candidate));
+
+          for (const baseCandidate of baseCandidates) {
+            try {
+              return new URL(value, baseCandidate);
+            }
+            catch (error) {
+              // Keep trying the next browser-provided base.
+            }
+          }
+
+          return new URL(value.startsWith('/') ? value : `/${value}`, fallbackOrigin);
         }
 
         function onInputChange() {

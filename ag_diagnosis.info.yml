@@ -6,6 +6,7 @@ core_version_requirement: ^10 || ^11
 base theme: diagnosis
 
 libraries:
+  - ag_diagnosis/svg_guard
   - ag_diagnosis/global
 
 libraries-override:
