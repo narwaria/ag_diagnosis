@@ -1,0 +1,271 @@
+.corrugation-sheet-viewer {
+  padding: clamp(18px, 3vw, 32px);
+  background: #f6f4ef;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  color: #071026;
+}
+
+.corrugation-sheet-viewer--ui-flat {
+  background: #ffffff;
+  box-shadow: none;
+}
+
+.corrugation-sheet-viewer--ui-transparent {
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.corrugation-sheet-viewer--ui-compact {
+  padding: clamp(14px, 2vw, 22px);
+}
+
+.corrugation-sheet-viewer__header {
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.corrugation-sheet-viewer h2 {
+  max-width: 900px;
+  margin: 0 auto 8px;
+  color: #071026;
+  font-size: clamp(2rem, 5vw, 4.25rem);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: 0;
+}
+
+.corrugation-sheet-viewer__header p {
+  max-width: 640px;
+  margin: 0 auto;
+  color: #263023;
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+.corrugation-sheet-viewer__workspace {
+  position: relative;
+  display: grid;
+  gap: 16px;
+}
+
+.corrugation-sheet-viewer .ply-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  z-index: 2;
+}
+
+.corrugation-sheet-viewer.is-unavailable .ply-controls,
+.corrugation-sheet-viewer.is-unavailable .ply-info {
+  display: none;
+}
+
+.corrugation-sheet-viewer .ply-controls__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.corrugation-sheet-viewer .ply-controls__select {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  margin: 0;
+  color: #1f271f;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.corrugation-sheet-viewer .ply-controls__select span {
+  white-space: nowrap;
+}
+
+.corrugation-sheet-viewer .ply-controls__select select {
+  min-height: 44px;
+  min-width: 132px;
+  padding: 8px 38px 8px 12px;
+  border: 1px solid rgba(31, 111, 159, 0.28);
+  border-radius: 4px;
+  background: #ffffff;
+  color: #071026;
+  font: inherit;
+  cursor: pointer;
+}
+
+.corrugation-sheet-viewer .ply-controls__button {
+  min-width: 72px;
+  min-height: 44px;
+  padding: 10px 18px;
+  border: none;
+  background: #1f6f9f;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font: inherit;
+}
+
+.corrugation-sheet-viewer .ply-controls__button:hover {
+  background: #155c86;
+}
+
+.corrugation-sheet-viewer .ply-controls__button:focus-visible,
+.corrugation-sheet-viewer .ply-controls__select select:focus-visible {
+  outline: 3px solid rgba(31, 111, 159, 0.28);
+  outline-offset: 2px;
+}
+
+.corrugation-sheet-viewer .viewer-canvas {
+  position: relative;
+  width: 100%;
+  height: var(--corrugation-sheet-viewer-height, clamp(340px, 42vw, 500px));
+  background: linear-gradient(180deg, #ffffff 0%, #f3f1ec 100%);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: grab;
+  overflow: hidden;
+  touch-action: none;
+  user-select: none;
+}
+
+.corrugation-sheet-viewer .viewer-canvas.is-dragging {
+  cursor: grabbing;
+}
+
+.corrugation-sheet-viewer .viewer-canvas:focus-visible {
+  outline: 3px solid rgba(31, 111, 159, 0.34);
+  outline-offset: 3px;
+}
+
+.corrugation-sheet-viewer .viewer-canvas canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.corrugation-sheet-viewer .viewer-canvas__fallback {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  margin: 0;
+  width: min(260px, calc(100% - 32px));
+  transform: translate(-50%, -50%);
+  color: #263023;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.corrugation-sheet-viewer .viewer-canvas.is-ready .viewer-canvas__fallback {
+  display: none;
+}
+
+.corrugation-sheet-viewer .ply-info {
+  text-align: center;
+  margin-top: 18px;
+  color: #1f271f;
+}
+
+.corrugation-sheet-viewer .ply-info p {
+  margin: 4px 0;
+}
+
+.corrugation-sheet-viewer .ply-controls__button.is-active {
+  background: #214d32;
+}
+
+.corrugation-sheet-viewer--controls-bottom .viewer-canvas {
+  order: 1;
+}
+
+.corrugation-sheet-viewer--controls-bottom .ply-controls {
+  order: 2;
+}
+
+.corrugation-sheet-viewer--controls-left .corrugation-sheet-viewer__workspace,
+.corrugation-sheet-viewer--controls-right .corrugation-sheet-viewer__workspace {
+  grid-template-columns: minmax(120px, 180px) minmax(0, 1fr);
+  align-items: stretch;
+}
+
+.corrugation-sheet-viewer--controls-right .corrugation-sheet-viewer__workspace {
+  grid-template-columns: minmax(0, 1fr) minmax(120px, 180px);
+}
+
+.corrugation-sheet-viewer--controls-left .ply-controls,
+.corrugation-sheet-viewer--controls-right .ply-controls {
+  align-content: center;
+  align-items: stretch;
+  justify-content: center;
+}
+
+.corrugation-sheet-viewer--controls-right .ply-controls {
+  order: 2;
+}
+
+.corrugation-sheet-viewer--controls-right .viewer-canvas {
+  order: 1;
+}
+
+.corrugation-sheet-viewer--control-layout-vertical .ply-controls,
+.corrugation-sheet-viewer--control-layout-vertical .ply-controls__buttons {
+  flex-direction: column;
+}
+
+.corrugation-sheet-viewer--control-layout-vertical .ply-controls__button,
+.corrugation-sheet-viewer--control-layout-vertical .ply-controls__select,
+.corrugation-sheet-viewer--controls-left .ply-controls__button,
+.corrugation-sheet-viewer--controls-right .ply-controls__button,
+.corrugation-sheet-viewer--controls-left .ply-controls__select,
+.corrugation-sheet-viewer--controls-right .ply-controls__select {
+  width: 100%;
+}
+
+.corrugation-sheet-viewer--controls-overlay-top .ply-controls,
+.corrugation-sheet-viewer--controls-overlay-bottom .ply-controls {
+  position: absolute;
+  right: 14px;
+  left: 14px;
+  padding: 10px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.84);
+  box-shadow: 0 8px 24px rgba(7, 16, 38, 0.12);
+  backdrop-filter: blur(8px);
+}
+
+.corrugation-sheet-viewer--controls-overlay-top .ply-controls {
+  top: 14px;
+}
+
+.corrugation-sheet-viewer--controls-overlay-bottom .ply-controls {
+  bottom: 14px;
+}
+
+@media (max-width: 720px) {
+  .corrugation-sheet-viewer--controls-left .corrugation-sheet-viewer__workspace,
+  .corrugation-sheet-viewer--controls-right .corrugation-sheet-viewer__workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .corrugation-sheet-viewer--controls-right .ply-controls,
+  .corrugation-sheet-viewer--controls-right .viewer-canvas {
+    order: initial;
+  }
+
+  .corrugation-sheet-viewer--controls-left .ply-controls,
+  .corrugation-sheet-viewer--controls-right .ply-controls {
+    align-items: center;
+  }
+
+  .corrugation-sheet-viewer--controls-left .ply-controls__button,
+  .corrugation-sheet-viewer--controls-right .ply-controls__button,
+  .corrugation-sheet-viewer--controls-left .ply-controls__select,
+  .corrugation-sheet-viewer--controls-right .ply-controls__select {
+    width: auto;
+  }
+}

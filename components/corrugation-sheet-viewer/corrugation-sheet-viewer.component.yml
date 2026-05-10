@@ -1,0 +1,109 @@
+name: 'Corrugation Sheet Viewer'
+description: 'A 3D viewer for corrugated sheet structures.'
+status: stable
+group: Ambey Global
+
+props:
+  type: object
+  properties:
+    title:
+      type: string
+      title: Title
+      default: 'Corrugated Sheet Structure'
+
+    description:
+      type: string
+      title: Description
+      default: 'View 3 Ply, 5 Ply, and 7 Ply corrugated sheet layers in 3D.'
+
+    default_ply:
+      type: string
+      title: Default Ply
+      enum:
+        - '3'
+        - '5'
+        - '7'
+      default: '3'
+
+    ui_style:
+      type: string
+      title: UI Style
+      description: Changes the outer surface so the viewer can fit different page designs.
+      enum:
+        - card
+        - flat
+        - transparent
+        - compact
+      meta:enum:
+        card: Card
+        flat: Flat
+        transparent: Transparent
+        compact: Compact
+      default: card
+
+    show_header:
+      type: boolean
+      title: Show Header
+      default: true
+
+    show_info:
+      type: boolean
+      title: Show Ply Info
+      default: true
+
+    ply_control_type:
+      type: string
+      title: Ply Control Type
+      description: Choose buttons, a dropdown, or both controls for switching ply.
+      enum:
+        - buttons
+        - dropdown
+        - both
+      meta:enum:
+        buttons: Buttons
+        dropdown: Dropdown
+        both: Buttons and dropdown
+      default: buttons
+
+    ply_controls_layout:
+      type: string
+      title: Ply Controls Layout
+      enum:
+        - horizontal
+        - vertical
+      meta:enum:
+        horizontal: Horizontal
+        vertical: Vertical
+      default: horizontal
+
+    ply_controls_position:
+      type: string
+      title: Ply Controls Position
+      description: Places ply controls inside the component workspace.
+      enum:
+        - top
+        - bottom
+        - left
+        - right
+        - overlay-top
+        - overlay-bottom
+      meta:enum:
+        top: Top
+        bottom: Bottom
+        left: Left
+        right: Right
+        overlay-top: Overlay top
+        overlay-bottom: Overlay bottom
+      default: top
+
+    canvas_height:
+      type: string
+      title: Canvas Height
+      description: CSS height for the 3D viewer area.
+      default: 'clamp(340px, 42vw, 500px)'
+
+libraryOverrides:
+  dependencies:
+    - core/drupal
+    - core/once
+    - ag_diagnosis/threejs

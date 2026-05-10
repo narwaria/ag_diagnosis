@@ -2,6 +2,7 @@
 
 {% set title = title|default('Corrugated Box Preview') %}
 {% set subtitle = subtitle|default('Customize box dimensions and preview the 3D corrugated box.') %}
+{% set eyebrow = eyebrow|default('Ambey Global Packaging') %}
 {% set width = width|default(220) %}
 {% set depth = depth|default(160) %}
 {% set height = height|default(140) %}
@@ -12,173 +13,211 @@
 {% set print_option = print_option|default('plain') %}
 {% set quantity = quantity|default(500) %}
 {% set request_quote_url = request_quote_url|default('/request-quote') %}
-{% set canvas_height = canvas_height|default('520px') %}
+{% set allowed_ui_styles = ['card', 'flat', 'transparent', 'compact'] %}
+{% set allowed_layouts = ['split', 'split-reverse', 'stacked', 'viewer-first'] %}
+{% set allowed_controls_positions = ['side', 'under-heading', 'under-viewer', 'overlay-left', 'overlay-right'] %}
+{% set allowed_controls_styles = ['panel', 'plain', 'tinted'] %}
+{% set allowed_controls_density = ['comfortable', 'compact'] %}
+{% set allowed_controls_widths = ['narrow', 'default', 'wide', 'extra-wide', 'fluid'] %}
+{% set controls_width_classes = {
+  'narrow': '[--ag-corrugation-box-controls-width:20rem]',
+  'default': '[--ag-corrugation-box-controls-width:24rem]',
+  'wide': '[--ag-corrugation-box-controls-width:28rem]',
+  'extra-wide': '[--ag-corrugation-box-controls-width:32rem]',
+  'fluid': '[--ag-corrugation-box-controls-width:clamp(20rem,30vw,34rem)]',
+} %}
+{% set allowed_viewer_themes = ['dark', 'light', 'warm', 'transparent'] %}
+{% set allowed_units = ['mm', 'cm', 'in'] %}
+{% set allowed_materials = ['3-ply-kraft', '5-ply-kraft', '7-ply-heavy', 'white-board'] %}
+{% set allowed_box_types = ['rsc', 'mailer', 'die-cut', 'half-slotted'] %}
+{% set allowed_print_options = ['plain', 'one-color', 'two-color', 'full-color'] %}
+{% set ui_style = ui_style|default('card') in allowed_ui_styles ? ui_style|default('card') : 'card' %}
+{% set layout = layout|default('split') in allowed_layouts ? layout|default('split') : 'split' %}
+{% set controls_position = controls_position|default('side') in allowed_controls_positions ? controls_position|default('side') : 'side' %}
+{% set controls_style = controls_style|default('panel') in allowed_controls_styles ? controls_style|default('panel') : 'panel' %}
+{% set controls_density = controls_density|default('comfortable') in allowed_controls_density ? controls_density|default('comfortable') : 'comfortable' %}
+{% set controls_width = controls_width|default('default') in allowed_controls_widths ? controls_width|default('default') : 'default' %}
+{% set viewer_theme = viewer_theme|default('dark') in allowed_viewer_themes ? viewer_theme|default('dark') : 'dark' %}
+{% set unit = unit in allowed_units ? unit : 'mm' %}
+{% set material = material in allowed_materials ? material : '5-ply-kraft' %}
+{% set box_type = box_type in allowed_box_types ? box_type : 'rsc' %}
+{% set print_option = print_option in allowed_print_options ? print_option : 'plain' %}
+{% set show_eyebrow = show_eyebrow ?? true %}
+{% set show_header = show_header ?? true %}
+{% set show_presets = show_presets ?? true %}
+{% set show_controls = show_controls ?? true %}
+{% set show_info = show_info ?? true %}
+{% set show_quote = show_quote ?? true %}
+{% set show_viewer_hint = show_viewer_hint ?? true %}
+{% set component_classes = [
+  'ag-corrugation-box',
+  'ag-corrugation-box--ui-' ~ ui_style,
+  'ag-corrugation-box--layout-' ~ layout,
+  'ag-corrugation-box--controls-' ~ controls_position,
+  'ag-corrugation-box--controls-style-' ~ controls_style,
+  'ag-corrugation-box--density-' ~ controls_density,
+  'ag-corrugation-box--viewer-' ~ viewer_theme,
+  show_viewer_hint ? 'ag-corrugation-box--show-viewer-hint' : 'ag-corrugation-box--hide-viewer-hint',
+] %}
+{% set workspace_classes = [
+  'ag-corrugation-box__workspace',
+  'ag-corrugation-box__workspace--controls-width-' ~ controls_width,
+  controls_width_classes[controls_width],
+] %}
 
-<section class="ag-corrugation-box" data-component="corrugation-box">
-  <div class="ag-corrugation-box__content">
-    <div class="ag-corrugation-box__eyebrow">
-      Ambey Global Packaging
+<section class="{{ component_classes|join(' ') }}" data-component="corrugation-box">
+  <div class="{{ workspace_classes|join(' ') }}">
+    {% if show_header %}
+      <div class="ag-corrugation-box__header">
+        {% if show_eyebrow %}
+          <div class="ag-corrugation-box__eyebrow">
+            {{ eyebrow }}
+          </div>
+        {% endif %}
+
+        <h2 class="ag-corrugation-box__title">
+          {{ title }}
+        </h2>
+
+        <p class="ag-corrugation-box__subtitle">
+          {{ subtitle }}
+        </p>
+      </div>
+    {% endif %}
+
+    {% if show_controls %}
+      <div class="ag-corrugation-box__controls">
+        {% if show_presets %}
+          <div class="ag-corrugation-box__presets" aria-label="Preset box sizes">
+            <button type="button" data-box-preset="small">Small</button>
+            <button type="button" data-box-preset="apparel">Apparel</button>
+            <button type="button" data-box-preset="fmcg">FMCG</button>
+            <button type="button" data-box-preset="heavy">Heavy</button>
+          </div>
+        {% endif %}
+
+        <label>
+          <span>Width</span>
+          <input type="range" min="120" max="420" value="{{ width }}" data-box-width>
+          <strong data-box-width-value>{{ width }} mm</strong>
+        </label>
+
+        <label>
+          <span>Depth</span>
+          <input type="range" min="100" max="320" value="{{ depth }}" data-box-depth>
+          <strong data-box-depth-value>{{ depth }} mm</strong>
+        </label>
+
+        <label>
+          <span>Height</span>
+          <input type="range" min="80" max="300" value="{{ height }}" data-box-height>
+          <strong data-box-height-value>{{ height }} mm</strong>
+        </label>
+
+        <label>
+          <span>Open</span>
+          <input type="range" min="0" max="100" value="{{ open }}" data-box-open>
+          <strong data-box-open-value>{{ open }}%</strong>
+        </label>
+
+        <label>
+          <span>Unit</span>
+          <select data-box-unit>
+            <option value="mm"{{ unit == 'mm' ? ' selected' }}>Millimeters</option>
+            <option value="cm"{{ unit == 'cm' ? ' selected' }}>Centimeters</option>
+            <option value="in"{{ unit == 'in' ? ' selected' }}>Inches</option>
+          </select>
+          <strong data-box-unit-value>{{ unit }}</strong>
+        </label>
+
+        <label>
+          <span>Material</span>
+          <select data-box-material>
+            <option value="3-ply-kraft"{{ material == '3-ply-kraft' ? ' selected' }}>3-ply Kraft</option>
+            <option value="5-ply-kraft"{{ material == '5-ply-kraft' ? ' selected' }}>5-ply Kraft</option>
+            <option value="7-ply-heavy"{{ material == '7-ply-heavy' ? ' selected' }}>7-ply Heavy Duty</option>
+            <option value="white-board"{{ material == 'white-board' ? ' selected' }}>White Board</option>
+          </select>
+          <strong data-box-material-value>5-ply</strong>
+        </label>
+
+        <label>
+          <span>Type</span>
+          <select data-box-type>
+            <option value="rsc"{{ box_type == 'rsc' ? ' selected' }}>Regular Slotted Carton</option>
+            <option value="mailer"{{ box_type == 'mailer' ? ' selected' }}>Mailer Box</option>
+            <option value="die-cut"{{ box_type == 'die-cut' ? ' selected' }}>Die-cut Box</option>
+            <option value="half-slotted"{{ box_type == 'half-slotted' ? ' selected' }}>Half-slotted Carton</option>
+          </select>
+          <strong data-box-type-value>RSC</strong>
+        </label>
+
+        <label>
+          <span>Print</span>
+          <select data-box-print>
+            <option value="plain"{{ print_option == 'plain' ? ' selected' }}>Plain</option>
+            <option value="one-color"{{ print_option == 'one-color' ? ' selected' }}>1-color Print</option>
+            <option value="two-color"{{ print_option == 'two-color' ? ' selected' }}>2-color Print</option>
+            <option value="full-color"{{ print_option == 'full-color' ? ' selected' }}>Full Color Print</option>
+          </select>
+          <strong data-box-print-value>Plain</strong>
+        </label>
+
+        <label>
+          <span>Qty</span>
+          <input type="number" min="100" step="50" value="{{ quantity }}" data-box-quantity>
+          <strong data-box-quantity-value>{{ quantity }}</strong>
+        </label>
+      </div>
+    {% endif %}
+
+    {% if show_info %}
+      <div class="ag-corrugation-box__info">
+        <div>
+          <strong>Strength</strong>
+          <span data-box-strength>Calculating...</span>
+        </div>
+        <div>
+          <strong>Volume</strong>
+          <span data-box-volume>Calculating...</span>
+        </div>
+        <div>
+          <strong>Payload</strong>
+          <span data-box-payload>Calculating...</span>
+        </div>
+        <div>
+          <strong>Estimated Cost</strong>
+          <span data-box-cost>Calculating...</span>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if show_quote %}
+      <a class="ag-corrugation-box__quote" href="{{ request_quote_url }}" data-box-quote-link>
+        Box calculator
+      </a>
+    {% endif %}
+
+    <div class="ag-corrugation-box__viewer">
+      <div
+        class="ag-corrugation-box__canvas"
+        data-corrugation-viewer
+        data-width="{{ width }}"
+        data-depth="{{ depth }}"
+        data-height="{{ height }}"
+        data-open="{{ open }}"
+        data-unit="{{ unit }}"
+        data-material="{{ material }}"
+        data-box-type="{{ box_type }}"
+        data-print="{{ print_option }}"
+        data-quantity="{{ quantity }}"
+        data-quote-url="{{ request_quote_url }}"
+        role="img"
+        tabindex="0"
+        aria-label="{{ title }} interactive 3D box preview"
+      >
+        <p class="ag-corrugation-box__fallback">3D box preview is unavailable in this browser.</p>
+      </div>
     </div>
-
-    <h2 class="ag-corrugation-box__title">
-      {{ title }}
-    </h2>
-
-    <p class="ag-corrugation-box__subtitle">
-      {{ subtitle }}
-    </p>
-
-    <div class="ag-corrugation-box__controls">
-      <div class="ag-corrugation-box__presets" aria-label="Preset box sizes">
-        <button type="button" data-box-preset="small">Small</button>
-        <button type="button" data-box-preset="apparel">Apparel</button>
-        <button type="button" data-box-preset="fmcg">FMCG</button>
-        <button type="button" data-box-preset="heavy">Heavy</button>
-      </div>
-
-      <label>
-        <span>Width</span>
-        <input
-          type="range"
-          min="120"
-          max="420"
-          value="{{ width }}"
-          data-box-width
-        >
-        <strong data-box-width-value>{{ width }} mm</strong>
-      </label>
-
-      <label>
-        <span>Depth</span>
-        <input
-          type="range"
-          min="100"
-          max="320"
-          value="{{ depth }}"
-          data-box-depth
-        >
-        <strong data-box-depth-value>{{ depth }} mm</strong>
-      </label>
-
-      <label>
-        <span>Height</span>
-        <input
-          type="range"
-          min="80"
-          max="300"
-          value="{{ height }}"
-          data-box-height
-        >
-        <strong data-box-height-value>{{ height }} mm</strong>
-      </label>
-
-      <label>
-        <span>Open</span>
-        <input
-          type="range"
-          min="0"
-          max="100"
-          value="{{ open }}"
-          data-box-open
-        >
-        <strong data-box-open-value>{{ open }}%</strong>
-      </label>
-
-      <label>
-        <span>Unit</span>
-        <select data-box-unit>
-          <option value="mm"{{ unit == 'mm' ? ' selected' }}>Millimeters</option>
-          <option value="cm"{{ unit == 'cm' ? ' selected' }}>Centimeters</option>
-          <option value="in"{{ unit == 'in' ? ' selected' }}>Inches</option>
-        </select>
-        <strong data-box-unit-value>{{ unit }}</strong>
-      </label>
-
-      <label>
-        <span>Material</span>
-        <select data-box-material>
-          <option value="3-ply-kraft"{{ material == '3-ply-kraft' ? ' selected' }}>3-ply Kraft</option>
-          <option value="5-ply-kraft"{{ material == '5-ply-kraft' ? ' selected' }}>5-ply Kraft</option>
-          <option value="7-ply-heavy"{{ material == '7-ply-heavy' ? ' selected' }}>7-ply Heavy Duty</option>
-          <option value="white-board"{{ material == 'white-board' ? ' selected' }}>White Board</option>
-        </select>
-        <strong data-box-material-value>5-ply</strong>
-      </label>
-
-      <label>
-        <span>Type</span>
-        <select data-box-type>
-          <option value="rsc"{{ box_type == 'rsc' ? ' selected' }}>Regular Slotted Carton</option>
-          <option value="mailer"{{ box_type == 'mailer' ? ' selected' }}>Mailer Box</option>
-          <option value="die-cut"{{ box_type == 'die-cut' ? ' selected' }}>Die-cut Box</option>
-          <option value="half-slotted"{{ box_type == 'half-slotted' ? ' selected' }}>Half-slotted Carton</option>
-        </select>
-        <strong data-box-type-value>RSC</strong>
-      </label>
-
-      <label>
-        <span>Print</span>
-        <select data-box-print>
-          <option value="plain"{{ print_option == 'plain' ? ' selected' }}>Plain</option>
-          <option value="one-color"{{ print_option == 'one-color' ? ' selected' }}>1-color Print</option>
-          <option value="two-color"{{ print_option == 'two-color' ? ' selected' }}>2-color Print</option>
-          <option value="full-color"{{ print_option == 'full-color' ? ' selected' }}>Full Color Print</option>
-        </select>
-        <strong data-box-print-value>Plain</strong>
-      </label>
-
-      <label>
-        <span>Qty</span>
-        <input
-          type="number"
-          min="100"
-          step="50"
-          value="{{ quantity }}"
-          data-box-quantity
-        >
-        <strong data-box-quantity-value>{{ quantity }}</strong>
-      </label>
-    </div>
-
-    <div class="ag-corrugation-box__info">
-      <div>
-        <strong>Strength</strong>
-        <span data-box-strength>Calculating...</span>
-      </div>
-      <div>
-        <strong>Volume</strong>
-        <span data-box-volume>Calculating...</span>
-      </div>
-      <div>
-        <strong>Payload</strong>
-        <span data-box-payload>Calculating...</span>
-      </div>
-      <div>
-        <strong>Estimated Cost</strong>
-        <span data-box-cost>Calculating...</span>
-      </div>
-    </div>
-
-    <a class="ag-corrugation-box__quote" href="{{ request_quote_url }}" data-box-quote-link>
-      Box calculator
-    </a>
-  </div>
-
-  <div class="ag-corrugation-box__viewer">
-    <div
-      class="ag-corrugation-box__canvas"
-      style="height: {{ canvas_height }};"
-      data-corrugation-viewer
-      data-width="{{ width }}"
-      data-depth="{{ depth }}"
-      data-height="{{ height }}"
-      data-open="{{ open }}"
-      data-unit="{{ unit }}"
-      data-material="{{ material }}"
-      data-box-type="{{ box_type }}"
-      data-print="{{ print_option }}"
-      data-quantity="{{ quantity }}"
-      data-quote-url="{{ request_quote_url }}"
-    ></div>
   </div>
 </section>

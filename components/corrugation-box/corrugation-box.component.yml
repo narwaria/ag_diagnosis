@@ -9,14 +9,163 @@ props:
     title:
       type: string
       title: "Title"
+      default: "Corrugated Box Preview"
       examples:
         - Corrugated Box Preview
 
     subtitle:
       type: string
       title: "Subtitle"
+      default: "Customize box dimensions and preview the 3D corrugated box."
       examples:
         - Customize box width, depth and height in real time.
+
+    eyebrow:
+      type: string
+      title: "Eyebrow"
+      default: "Ambey Global Packaging"
+
+    ui_style:
+      type: string
+      title: "UI Style"
+      description: Changes the outer component surface for different page designs.
+      enum:
+        - card
+        - flat
+        - transparent
+        - compact
+      meta:enum:
+        card: Card
+        flat: Flat
+        transparent: Transparent
+        compact: Compact
+      default: card
+
+    layout:
+      type: string
+      title: "Layout"
+      description: Controls the arrangement of heading, controls, stats, CTA, and viewer.
+      enum:
+        - split
+        - split-reverse
+        - stacked
+        - viewer-first
+      meta:enum:
+        split: Split
+        split-reverse: Split reverse
+        stacked: Stacked
+        viewer-first: Viewer first
+      default: split
+
+    controls_position:
+      type: string
+      title: "Controls Position"
+      description: Places the configuration controls within the component layout.
+      enum:
+        - side
+        - under-heading
+        - under-viewer
+        - overlay-left
+        - overlay-right
+      meta:enum:
+        side: Side
+        under-heading: Under heading
+        under-viewer: Under viewer
+        overlay-left: Overlay left
+        overlay-right: Overlay right
+      default: side
+
+    controls_style:
+      type: string
+      title: "Controls Style"
+      enum:
+        - panel
+        - plain
+        - tinted
+      meta:enum:
+        panel: Panel
+        plain: Plain
+        tinted: Tinted
+      default: panel
+
+    controls_density:
+      type: string
+      title: "Controls Density"
+      enum:
+        - comfortable
+        - compact
+      meta:enum:
+        comfortable: Comfortable
+        compact: Compact
+      default: comfortable
+
+    controls_width:
+      type: string
+      title: "Controls Width"
+      description: Width preset for the controller column. The viewer automatically uses the remaining horizontal space.
+      enum:
+        - narrow
+        - default
+        - wide
+        - extra-wide
+        - fluid
+      meta:enum:
+        narrow: "Narrow - 20rem"
+        default: "Default - 24rem"
+        wide: "Wide - 28rem"
+        extra-wide: "Extra wide - 32rem"
+        fluid: "Fluid - clamp(20rem, 30vw, 34rem)"
+      default: default
+
+    viewer_theme:
+      type: string
+      title: "Viewer Theme"
+      enum:
+        - dark
+        - light
+        - warm
+        - transparent
+      meta:enum:
+        dark: Dark
+        light: Light
+        warm: Warm
+        transparent: Transparent
+      default: dark
+
+    show_eyebrow:
+      type: boolean
+      title: "Show Eyebrow"
+      default: true
+
+    show_header:
+      type: boolean
+      title: "Show Header"
+      default: true
+
+    show_presets:
+      type: boolean
+      title: "Show Presets"
+      default: true
+
+    show_controls:
+      type: boolean
+      title: "Show Controls"
+      default: true
+
+    show_info:
+      type: boolean
+      title: "Show Stats"
+      default: true
+
+    show_quote:
+      type: boolean
+      title: "Show Quote Link"
+      default: true
+
+    show_viewer_hint:
+      type: boolean
+      title: "Show Viewer Hint"
+      default: true
 
     width:
       type: number
@@ -112,11 +261,6 @@ props:
       title: "Request Quote URL"
       description: Link used for the request quote button.
       default: "/request-quote"
-
-    canvas_height:
-      type: string
-      title: "Canvas Height"
-      default: "520px"
 
 libraryOverrides:
   dependencies:

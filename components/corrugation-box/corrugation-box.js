@@ -1,10 +1,17 @@
 (function (Drupal, once) {
+  const instances = new WeakMap();
+
   Drupal.behaviors.agCorrugationBox = {
     attach(context) {
       once('ag-corrugation-box', '[data-component="corrugation-box"]', context).forEach((component) => {
         const viewer = component.querySelector('[data-corrugation-viewer]');
 
-        if (!viewer || typeof THREE === 'undefined') {
+        if (!viewer) {
+          return;
+        }
+
+        if (typeof THREE === 'undefined') {
+          component.classList.add('is-unavailable');
           return;
         }
 
@@ -46,6 +53,13 @@
         let isDragging = false;
         let previousPointerX = 0;
         let previousPointerY = 0;
+        let animationFrame = null;
+        let resizeObserver = null;
+        let autoCenterRotationY = -0.45;
+        let autoPhase = 0;
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+        const controller = new AbortController();
+        const listenerOptions = { signal: controller.signal };
 
         const quoteBaseUrl = viewer.dataset.quoteUrl || '/request-quote';
         const materials = {
@@ -53,28 +67,28 @@
             label: '3-ply Kraft Board',
             shortLabel: '3-ply',
             rate: 0.78,
-            color: 0xd28a3a,
+            color: 0xb98545,
             strength: 1,
           },
           '5-ply-kraft': {
             label: '5-ply Kraft Board',
             shortLabel: '5-ply',
             rate: 1,
-            color: 0xc98338,
+            color: 0xa86f35,
             strength: 2,
           },
           '7-ply-heavy': {
             label: '7-ply Heavy Duty Board',
             shortLabel: '7-ply',
             rate: 1.38,
-            color: 0xa96528,
+            color: 0x835225,
             strength: 3,
           },
           'white-board': {
             label: 'White Corrugated Board',
             shortLabel: 'White',
             rate: 1.18,
-            color: 0xe9dcc8,
+            color: 0xd8d0bf,
             strength: 1.6,
           },
         };
@@ -216,28 +230,38 @@
         camera.position.set(380, 250, 430);
         camera.lookAt(0, 45, 0);
 
-        const renderer = new THREE.WebGLRenderer({
-          antialias: true,
-          alpha: true,
-        });
+        let renderer = null;
 
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        try {
+          renderer = new THREE.WebGLRenderer({
+            antialias: true,
+            alpha: true,
+          });
+        }
+        catch (error) {
+          component.classList.add('is-unavailable');
+          return;
+        }
+
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
         renderer.setSize(viewer.clientWidth, viewer.clientHeight);
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         renderer.outputEncoding = THREE.sRGBEncoding;
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 1.08;
+        renderer.toneMappingExposure = 0.92;
 
         viewer.appendChild(renderer.domElement);
+        renderer.domElement.setAttribute('aria-hidden', 'true');
+        viewer.classList.add('is-ready');
 
-        const ambientLight = new THREE.AmbientLight(0xfff2df, 0.46);
+        const ambientLight = new THREE.AmbientLight(0xfff2df, 0.34);
         scene.add(ambientLight);
 
-        const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0x3f2b1d, 0.55);
+        const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0x3f2b1d, 0.44);
         scene.add(hemisphereLight);
 
-        const keyLight = new THREE.DirectionalLight(0xffffff, 1.18);
+        const keyLight = new THREE.DirectionalLight(0xffffff, 0.98);
         keyLight.position.set(280, 460, 320);
         keyLight.castShadow = true;
         keyLight.shadow.mapSize.width = 2048;
@@ -250,11 +274,11 @@
         keyLight.shadow.camera.bottom = -360;
         scene.add(keyLight);
 
-        const rimLight = new THREE.DirectionalLight(0xffb86b, 0.58);
+        const rimLight = new THREE.DirectionalLight(0xffb86b, 0.42);
         rimLight.position.set(-260, 160, -240);
         scene.add(rimLight);
 
-        const fillLight = new THREE.PointLight(0xffb86b, 0.7, 900);
+        const fillLight = new THREE.PointLight(0xffb86b, 0.36, 900);
         fillLight.position.set(-260, 180, 280);
         scene.add(fillLight);
 
@@ -276,11 +300,11 @@
         boardTexture.anisotropy = renderer.capabilities.getMaxAnisotropy();
 
         const boardMaterial = new THREE.MeshStandardMaterial({
-          color: 0xc98338,
+          color: 0xa86f35,
           map: boardTexture,
           bumpMap: boardTexture,
-          bumpScale: 0.75,
-          roughness: 0.92,
+          bumpScale: 0.45,
+          roughness: 0.88,
           metalness: 0.01,
         });
 
@@ -288,22 +312,22 @@
         innerBoardMaterial.roughness = 0.96;
 
         const edgeMaterial = new THREE.LineBasicMaterial({
-          color: 0x6b3d19,
+          color: 0x6f431c,
           transparent: true,
-          opacity: 0.34,
+          opacity: 0.28,
         });
 
         const creaseMaterial = new THREE.MeshStandardMaterial({
-          color: 0x8a4f1f,
+          color: 0x946634,
           roughness: 0.98,
           metalness: 0,
         });
 
         const tapeMaterial = new THREE.MeshStandardMaterial({
-          color: 0xf2c15d,
+          color: 0xb98545,
           transparent: true,
-          opacity: 0.42,
-          roughness: 0.62,
+          opacity: 0.34,
+          roughness: 0.7,
           metalness: 0,
         });
 
@@ -331,17 +355,17 @@
 
           canvas.width = size;
           canvas.height = size;
-          context2d.fillStyle = '#f2c05b';
+          context2d.fillStyle = '#efe0c4';
           context2d.fillRect(0, 0, size, size);
 
           for (let y = 0; y < size; y += 5) {
-            context2d.fillStyle = y % 10 === 0 ? 'rgba(125, 72, 25, 0.13)' : 'rgba(255, 255, 255, 0.09)';
+            context2d.fillStyle = y % 10 === 0 ? 'rgba(91, 54, 24, 0.12)' : 'rgba(255, 255, 255, 0.05)';
             context2d.fillRect(0, y, size, 1);
           }
 
           for (let i = 0; i < 520; i++) {
-            const alpha = 0.04 + Math.random() * 0.08;
-            const shade = Math.random() > 0.5 ? 255 : 92;
+            const alpha = 0.025 + Math.random() * 0.055;
+            const shade = Math.random() > 0.54 ? 245 : 88;
 
             context2d.fillStyle = `rgba(${shade}, ${shade}, ${shade}, ${alpha})`;
             context2d.fillRect(Math.random() * size, Math.random() * size, 1 + Math.random() * 2, 1);
@@ -376,9 +400,9 @@
           return panelGroup;
         }
 
-        function addFlap(name, sizeX, sizeZ, hingeX, hingeY, hingeZ, openRotation, axis, layerOffset = 0, material = boardMaterial) {
+        function addFlap(name, sizeX, sizeZ, hingeX, hingeY, hingeZ, openRotation, axis, layerOffset = 0, material = boardMaterial, thickness = 2) {
           const flapGroup = new THREE.Group();
-          const geometry = new THREE.BoxGeometry(sizeX, 5, sizeZ);
+          const geometry = new THREE.BoxGeometry(sizeX, thickness, sizeZ);
           const flap = new THREE.Mesh(geometry, material);
           const edge = new THREE.LineSegments(new THREE.EdgesGeometry(geometry), edgeMaterial);
 
@@ -429,17 +453,17 @@
         }
 
         function addBoxDetails(w, d, h, t, baseY, topY, openProgress) {
-          const lip = Math.max(2.5, t * 0.58);
-          const cornerDepth = Math.max(3, t * 0.72);
+          const lip = Math.max(1.6, t * 0.34);
+          const cornerDepth = Math.max(1.7, t * 0.38);
 
-          addDetailStrip('front-top-lip', w + t, lip, t * 0.62, 0, topY + 2.8, d / 2 + 1.7);
-          addDetailStrip('back-top-lip', w + t, lip, t * 0.62, 0, topY + 2.8, -d / 2 - 1.7);
-          addDetailStrip('left-top-lip', t * 0.62, lip, d + t, -w / 2 - 1.7, topY + 2.8, 0);
-          addDetailStrip('right-top-lip', t * 0.62, lip, d + t, w / 2 + 1.7, topY + 2.8, 0);
+          addDetailStrip('front-top-lip', w + t, lip, t * 0.38, 0, topY + 1.7, d / 2 + 1.1);
+          addDetailStrip('back-top-lip', w + t, lip, t * 0.38, 0, topY + 1.7, -d / 2 - 1.1);
+          addDetailStrip('left-top-lip', t * 0.38, lip, d + t, -w / 2 - 1.1, topY + 1.7, 0);
+          addDetailStrip('right-top-lip', t * 0.38, lip, d + t, w / 2 + 1.1, topY + 1.7, 0);
 
-          addDetailStrip('front-right-corner', cornerDepth, h + 5, cornerDepth, w / 2 + 1.4, baseY + h / 2, d / 2 + 1.4);
-          addDetailStrip('front-left-corner', cornerDepth, h + 5, cornerDepth, -w / 2 - 1.4, baseY + h / 2, d / 2 + 1.4);
-          addDetailStrip('back-right-corner', cornerDepth, h + 5, cornerDepth, w / 2 + 1.4, baseY + h / 2, -d / 2 - 1.4);
+          addDetailStrip('front-right-corner', cornerDepth, h + 2, cornerDepth, w / 2 + 0.7, baseY + h / 2, d / 2 + 0.7);
+          addDetailStrip('front-left-corner', cornerDepth, h + 2, cornerDepth, -w / 2 - 0.7, baseY + h / 2, d / 2 + 0.7);
+          addDetailStrip('back-right-corner', cornerDepth, h + 2, cornerDepth, w / 2 + 0.7, baseY + h / 2, -d / 2 - 0.7);
 
           if (openProgress <= 0.16) {
             const tapeY = topY + 7.2;
@@ -453,11 +477,14 @@
         function buildBox() {
           clearGroup(boxGroup);
 
+          // User dimensions are stored in millimeters. The model is scaled down for
+          // camera framing, so real board thickness is scaled by the same factor.
           const scale = 0.88;
+          const boardThicknessMm = 2;
           const w = boxWidth * scale;
           const d = boxDepth * scale;
           const h = boxHeight * scale * 0.9;
-          const t = 5;
+          const t = boardThicknessMm * scale;
           const baseY = -h / 2;
           const midY = baseY + h / 2;
           const topY = baseY + h;
@@ -481,10 +508,10 @@
           const endFlapRotation = endOpenProgress * 2.18;
           const topLayerLift = (1 - endOpenProgress) * 6;
 
-          addFlap('left-flap', sideFlapLength, d, -w / 2, topY, 0, sideFlapRotation, 'z-left');
-          addFlap('right-flap', sideFlapLength, d, w / 2, topY, 0, -sideFlapRotation, 'z-right');
-          addFlap('front-flap', w, endFlapLength, 0, topY, d / 2, endFlapRotation, 'x-front', topLayerLift);
-          addFlap('back-flap', w, endFlapLength, 0, topY, -d / 2, -endFlapRotation, 'x-back', topLayerLift);
+          addFlap('left-flap', sideFlapLength, d, -w / 2, topY, 0, sideFlapRotation, 'z-left', 0, boardMaterial, t);
+          addFlap('right-flap', sideFlapLength, d, w / 2, topY, 0, -sideFlapRotation, 'z-right', 0, boardMaterial, t);
+          addFlap('front-flap', w, endFlapLength, 0, topY, d / 2, endFlapRotation, 'x-front', topLayerLift, boardMaterial, t);
+          addFlap('back-flap', w, endFlapLength, 0, topY, -d / 2, -endFlapRotation, 'x-back', topLayerLift, boardMaterial, t);
           addBoxDetails(w, d, h, t, baseY, topY, openProgress);
 
           // Center model.
@@ -528,8 +555,8 @@
           }
           boardMaterial.color.setHex(selectedMaterial.color);
           innerBoardMaterial.color.setHex(shiftHexColor(selectedMaterial.color, 28));
-          creaseMaterial.color.setHex(shiftHexColor(selectedMaterial.color, -52));
-          edgeMaterial.color.setHex(shiftHexColor(selectedMaterial.color, -74));
+          creaseMaterial.color.setHex(shiftHexColor(selectedMaterial.color, -12));
+          edgeMaterial.color.setHex(shiftHexColor(selectedMaterial.color, -36));
           updateCapacity(selectedMaterial, selectedBoxType);
           updateEstimate(selectedMaterial, selectedBoxType, selectedPrint);
           updateQuoteLink(selectedMaterial, selectedBoxType, selectedPrint);
@@ -657,15 +684,15 @@
         }
 
         function onInputChange() {
-          boxWidth = Number(widthInput.value);
-          boxDepth = Number(depthInput.value);
-          boxHeight = Number(heightInput.value);
-          boxOpen = Number(openInput.value);
-          boxUnit = unitInput.value;
-          boxMaterial = materialInput.value;
-          boxType = typeInput.value;
-          printOption = printInput.value;
-          boxQuantity = Math.max(100, Number(quantityInput.value || 100));
+          boxWidth = widthInput ? Number(widthInput.value) : boxWidth;
+          boxDepth = depthInput ? Number(depthInput.value) : boxDepth;
+          boxHeight = heightInput ? Number(heightInput.value) : boxHeight;
+          boxOpen = openInput ? Number(openInput.value) : boxOpen;
+          boxUnit = unitInput ? unitInput.value : boxUnit;
+          boxMaterial = materialInput ? materialInput.value : boxMaterial;
+          boxType = typeInput ? typeInput.value : boxType;
+          printOption = printInput ? printInput.value : printOption;
+          boxQuantity = quantityInput ? Math.max(100, Number(quantityInput.value || 100)) : boxQuantity;
 
           updateLabels();
           buildBox();
@@ -678,44 +705,84 @@
             return;
           }
 
-          widthInput.value = preset.width;
-          depthInput.value = preset.depth;
-          heightInput.value = preset.height;
-          materialInput.value = preset.material;
-          typeInput.value = preset.boxType;
-          printInput.value = preset.print;
-          quantityInput.value = preset.quantity;
+          if (widthInput) {
+            widthInput.value = preset.width;
+          }
+          if (depthInput) {
+            depthInput.value = preset.depth;
+          }
+          if (heightInput) {
+            heightInput.value = preset.height;
+          }
+          if (materialInput) {
+            materialInput.value = preset.material;
+          }
+          if (typeInput) {
+            typeInput.value = preset.boxType;
+          }
+          if (printInput) {
+            printInput.value = preset.print;
+          }
+          if (quantityInput) {
+            quantityInput.value = preset.quantity;
+          }
 
           onInputChange();
         }
 
-        if (widthInput && depthInput && heightInput && openInput && unitInput && materialInput && typeInput && printInput && quantityInput) {
-          widthInput.addEventListener('input', onInputChange);
-          depthInput.addEventListener('input', onInputChange);
-          heightInput.addEventListener('input', onInputChange);
-          openInput.addEventListener('input', onInputChange);
-          unitInput.addEventListener('change', onInputChange);
-          materialInput.addEventListener('change', onInputChange);
-          typeInput.addEventListener('change', onInputChange);
-          printInput.addEventListener('change', onInputChange);
-          quantityInput.addEventListener('input', onInputChange);
-
-          presetButtons.forEach((button) => {
-            button.addEventListener('click', () => applyPreset(button.dataset.boxPreset));
-          });
+        if (widthInput) {
+          widthInput.addEventListener('input', onInputChange, listenerOptions);
         }
+        if (depthInput) {
+          depthInput.addEventListener('input', onInputChange, listenerOptions);
+        }
+        if (heightInput) {
+          heightInput.addEventListener('input', onInputChange, listenerOptions);
+        }
+        if (openInput) {
+          openInput.addEventListener('input', onInputChange, listenerOptions);
+        }
+        if (unitInput) {
+          unitInput.addEventListener('change', onInputChange, listenerOptions);
+        }
+        if (materialInput) {
+          materialInput.addEventListener('change', onInputChange, listenerOptions);
+        }
+        if (typeInput) {
+          typeInput.addEventListener('change', onInputChange, listenerOptions);
+        }
+        if (printInput) {
+          printInput.addEventListener('change', onInputChange, listenerOptions);
+        }
+        if (quantityInput) {
+          quantityInput.addEventListener('input', onInputChange, listenerOptions);
+        }
+
+        presetButtons.forEach((button) => {
+          button.addEventListener('click', () => applyPreset(button.dataset.boxPreset), listenerOptions);
+        });
 
         function handleResize() {
           const width = viewer.clientWidth;
           const height = viewer.clientHeight;
 
+          if (!width || !height) {
+            return;
+          }
+
           camera.aspect = width / height;
           camera.updateProjectionMatrix();
 
-          renderer.setSize(width, height);
+          renderer.setSize(width, height, false);
         }
 
-        window.addEventListener('resize', handleResize);
+        if (typeof ResizeObserver !== 'undefined') {
+          resizeObserver = new ResizeObserver(handleResize);
+          resizeObserver.observe(viewer);
+        }
+        else {
+          window.addEventListener('resize', handleResize, listenerOptions);
+        }
 
         function clamp(value, min, max) {
           return Math.min(Math.max(value, min), max);
@@ -731,7 +798,7 @@
           previousPointerX = event.clientX;
           previousPointerY = event.clientY;
           viewer.setPointerCapture(event.pointerId);
-        });
+        }, listenerOptions);
 
         viewer.addEventListener('pointermove', (event) => {
           if (!isDragging) {
@@ -742,37 +809,115 @@
           const deltaY = event.clientY - previousPointerY;
 
           boxGroup.rotation.y += deltaX * 0.01;
+          autoCenterRotationY = boxGroup.rotation.y;
           boxGroup.rotation.x = clamp(boxGroup.rotation.x + deltaY * 0.006, -0.55, 0.35);
 
           previousPointerX = event.clientX;
           previousPointerY = event.clientY;
-        });
+        }, listenerOptions);
 
         viewer.addEventListener('pointerup', (event) => {
+          autoCenterRotationY = boxGroup.rotation.y;
           setDragging(false);
 
           if (viewer.hasPointerCapture(event.pointerId)) {
             viewer.releasePointerCapture(event.pointerId);
           }
-        });
+        }, listenerOptions);
 
         viewer.addEventListener('pointercancel', () => {
           setDragging(false);
-        });
+        }, listenerOptions);
 
         viewer.addEventListener('lostpointercapture', () => {
           setDragging(false);
-        });
+        }, listenerOptions);
+
+        viewer.addEventListener('keydown', (event) => {
+          const keyActions = {
+            ArrowLeft: () => {
+              boxGroup.rotation.y -= 0.12;
+            },
+            ArrowRight: () => {
+              boxGroup.rotation.y += 0.12;
+            },
+            ArrowUp: () => {
+              boxGroup.rotation.x = clamp(boxGroup.rotation.x - 0.1, -0.55, 0.35);
+            },
+            ArrowDown: () => {
+              boxGroup.rotation.x = clamp(boxGroup.rotation.x + 0.1, -0.55, 0.35);
+            },
+            Home: () => {
+              boxGroup.rotation.set(-0.08, -0.45, 0);
+            },
+          };
+
+          if (!keyActions[event.key]) {
+            return;
+          }
+
+          event.preventDefault();
+          keyActions[event.key]();
+          autoCenterRotationY = boxGroup.rotation.y;
+          renderer.render(scene, camera);
+        }, listenerOptions);
 
         function animate() {
-          requestAnimationFrame(animate);
+          animationFrame = requestAnimationFrame(animate);
+
+          if (!isDragging && !prefersReducedMotion.matches) {
+            autoPhase += 0.012;
+            boxGroup.rotation.y = autoCenterRotationY + Math.sin(autoPhase) * 0.14;
+          }
 
           renderer.render(scene, camera);
         }
 
         updateLabels();
         buildBox();
+        handleResize();
         animate();
+
+        instances.set(component, () => {
+          if (animationFrame) {
+            cancelAnimationFrame(animationFrame);
+          }
+          controller.abort();
+          if (resizeObserver) {
+            resizeObserver.disconnect();
+          }
+          clearGroup(boxGroup);
+          boardTexture.dispose();
+          boardMaterial.dispose();
+          innerBoardMaterial.dispose();
+          edgeMaterial.dispose();
+          creaseMaterial.dispose();
+          tapeMaterial.dispose();
+          renderer.dispose();
+          viewer.classList.remove('is-ready');
+          if (renderer.domElement.parentNode === viewer) {
+            viewer.removeChild(renderer.domElement);
+          }
+          instances.delete(component);
+        });
+      });
+    },
+
+    detach(context, settings, trigger) {
+      if (trigger !== 'unload') {
+        return;
+      }
+
+      const components = context.matches && context.matches('[data-component="corrugation-box"]')
+        ? [context]
+        : context.querySelectorAll('[data-component="corrugation-box"]');
+
+      components.forEach((component) => {
+        const destroy = instances.get(component);
+
+        if (destroy) {
+          destroy();
+        }
       });
     },
   };

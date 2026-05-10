@@ -1,0 +1,74 @@
+{% set title = title|default('Corrugated Sheet Structure') %}
+{% set description = description|default('View 3 Ply, 5 Ply, and 7 Ply corrugated sheet layers in 3D.') %}
+{% set allowed_ply = ['3', '5', '7'] %}
+{% set allowed_ui_styles = ['card', 'flat', 'transparent', 'compact'] %}
+{% set allowed_control_types = ['buttons', 'dropdown', 'both'] %}
+{% set allowed_control_layouts = ['horizontal', 'vertical'] %}
+{% set allowed_control_positions = ['top', 'bottom', 'left', 'right', 'overlay-top', 'overlay-bottom'] %}
+{% set default_ply = default_ply|default('3') in allowed_ply ? default_ply|default('3') : '3' %}
+{% set ui_style = ui_style|default('card') in allowed_ui_styles ? ui_style|default('card') : 'card' %}
+{% set show_header = show_header ?? true %}
+{% set show_info = show_info ?? true %}
+{% set ply_control_type = ply_control_type|default('buttons') in allowed_control_types ? ply_control_type|default('buttons') : 'buttons' %}
+{% set ply_controls_layout = ply_controls_layout|default('horizontal') in allowed_control_layouts ? ply_controls_layout|default('horizontal') : 'horizontal' %}
+{% set ply_controls_position = ply_controls_position|default('top') in allowed_control_positions ? ply_controls_position|default('top') : 'top' %}
+{% set canvas_height = canvas_height|default('clamp(340px, 42vw, 500px)') %}
+{% set canvas_height = canvas_height matches '/^[0-9A-Za-z().,%\\s+-]+$/' ? canvas_height : 'clamp(340px, 42vw, 500px)' %}
+{% set canvas_label = title ~ ': interactive 3D corrugated sheet preview' %}
+{% set component_classes = [
+  'corrugation-sheet-viewer',
+  'corrugation-sheet-viewer--ui-' ~ ui_style,
+  'corrugation-sheet-viewer--controls-' ~ ply_controls_position,
+  'corrugation-sheet-viewer--control-layout-' ~ ply_controls_layout,
+  'corrugation-sheet-viewer--control-type-' ~ ply_control_type,
+] %}
+
+<div class="{{ component_classes|join(' ') }}" data-component="corrugation-sheet-viewer" data-default-ply="{{ default_ply }}">
+  {% if show_header %}
+    <header class="corrugation-sheet-viewer__header">
+      <h2>{{ title }}</h2>
+      <p>{{ description }}</p>
+    </header>
+  {% endif %}
+
+  <div class="corrugation-sheet-viewer__workspace">
+    <div class="ply-controls" aria-label="Corrugated sheet ply controls">
+      {% if ply_control_type in ['buttons', 'both'] %}
+        <div class="ply-controls__buttons">
+          <button class="ply-controls__button" type="button" data-ply="3" aria-pressed="false">3 Ply</button>
+          <button class="ply-controls__button" type="button" data-ply="5" aria-pressed="false">5 Ply</button>
+          <button class="ply-controls__button" type="button" data-ply="7" aria-pressed="false">7 Ply</button>
+        </div>
+      {% endif %}
+
+      {% if ply_control_type in ['dropdown', 'both'] %}
+        <label class="ply-controls__select">
+          <span>Ply type</span>
+          <select data-ply-select>
+            <option value="3"{{ default_ply == '3' ? ' selected' }}>3 Ply</option>
+            <option value="5"{{ default_ply == '5' ? ' selected' }}>5 Ply</option>
+            <option value="7"{{ default_ply == '7' ? ' selected' }}>7 Ply</option>
+          </select>
+        </label>
+      {% endif %}
+    </div>
+
+    <div
+      class="viewer-canvas"
+      style="--corrugation-sheet-viewer-height: {{ canvas_height }};"
+      data-corrugation-sheet-viewer
+      role="img"
+      tabindex="0"
+      aria-label="{{ canvas_label }}"
+    >
+      <p class="viewer-canvas__fallback">3D preview is unavailable in this browser.</p>
+    </div>
+  </div>
+
+  {% if show_info %}
+    <div class="ply-info" aria-live="polite">
+      <p>Selected Type: <span data-selected-ply>{{ default_ply }}</span> Ply</p>
+      <p data-ply-details></p>
+    </div>
+  {% endif %}
+</div>
